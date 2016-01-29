@@ -34,18 +34,11 @@ var jsFiles = {
 };
 
 // Lint JS/JSX files
-gulp.task('eslint', function() {
-  return gulp.src(jsFiles.source)
-    .pipe(eslint({
-      baseConfig: {
-        "ecmaFeatures": {
-           "jsx": true
-         }
-      }
-    }))
-    .pipe(eslint.format())
-    .pipe(eslint.failAfterError());
-});
+// gulp.task('eslint', function() {
+//   return gulp.src(jsFiles.source)
+//     .pipe(eslint.format())
+//     .pipe(eslint.failAfterError());
+// });
 
 // Copy react.js and react-dom.js
 // only if the copy in node_modules is "newer"
@@ -62,11 +55,11 @@ gulp.task('copy-react-dom', function() {
 
 // Concatenate jsFiles.vendor and jsFiles.source into one JS file.
 // Run copy-react and eslint before concatenating
-gulp.task('concat', ['copy-react', 'copy-react-dom', 'eslint'], function() {
+gulp.task('concat', ['copy-react', 'copy-react-dom'], function() {
   return gulp.src(jsFiles.vendor.concat(jsFiles.source))
     .pipe(sourcemaps.init())
     .pipe(babel({
-      compact: false
+      presets: ["react"],
     }))
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('./'))
