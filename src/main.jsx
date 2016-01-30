@@ -17,11 +17,16 @@ var PartitionSelector = React.createClass({
     return Math.round(width * 10000) / 100 + '%';
   },
   splitPartition: function(key, event) {
-    var partition = this.state.partitions[key];
+    var partition = this.state.partitions[key],
+        boundingRect = event.target.getBoundingClientRect(),
+        totalWidth = boundingRect.width,
+        splitPoint = event.clientX - boundingRect.left,
+        leftSize = partition.size * splitPoint / totalWidth,
+        rightSize = partition.size - leftSize;
     console.log('splitting partition', key, partition);
     var partitions = this.state.partitions.concat([]);
-    partitions.splice(key, 1, {name: partition.name, size: partition.size - 10});
-    partitions.splice(key, 0, {name: 'N', size: 10});
+    partitions.splice(key, 1, {name: partition.name, size: rightSize});
+    partitions.splice(key, 0, {name: 'N', size: leftSize});
     console.log('new partitions', partitions);
     this.setState({partitions: partitions});
   },
@@ -37,7 +42,7 @@ var PartitionSelector = React.createClass({
     return (
       <div key={key} className="cell" size={width} style={style} onDoubleClick={(e) => this.splitPartition(key, e)}>
         {partition.name}
-        <div className="handle" onDrag={() => this.startDragHandle(key)}></div>
+        <div className="handle" onMouseDown={() => this.startDragHandle(key)}></div>
       </div>
     );
   },
