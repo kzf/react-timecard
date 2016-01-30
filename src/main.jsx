@@ -16,17 +16,32 @@ var PartitionSelector = React.createClass({
   calculatePercentWidth: function(width) {
     return Math.round(width * 10000) / 100 + '%';
   },
+  splitPartition: function(key, event) {
+    var partition = this.state.partitions[key];
+    console.log('splitting partition', key, partition);
+    var partitions = this.state.partitions.concat([]);
+    partitions.splice(key, 1, {name: partition.name, size: partition.size - 10});
+    partitions.splice(key, 0, {name: 'N', size: 10});
+    console.log('new partitions', partitions);
+    this.setState({partitions: partitions});
+  },
+  
+  startDragHandle: function(key) {
+    console.log('starting dragging', key);
+  },
+  
   renderPartition: function(partition, key, width) {
     // takes a width in percent e.g. 0.42
-    console.log('rendering', key ,width);
+    console.log('rendering', partition.name, key ,width);
     var style = {width: this.calculatePercentWidth(width)};
     return (
-      <div key={key} className="cell" size={width} style={style}>
+      <div key={key} className="cell" size={width} style={style} onDoubleClick={(e) => this.splitPartition(key, e)}>
         {partition.name}
-        <div className="handle"></div>
+        <div className="handle" onDrag={() => this.startDragHandle(key)}></div>
       </div>
     );
   },
+  
   render: function() {
     var totalSize = this.totalSize();
     var partitions = this.state.partitions.map(function(partition, i) {
