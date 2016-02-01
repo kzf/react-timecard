@@ -11,6 +11,7 @@ var plumber      = require('gulp-plumber');
 var reload       = browserSync.reload;
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
+var gutil        = require('gulp-util');
 
 var onError = function(err) {
   notify.onError({
@@ -61,6 +62,7 @@ gulp.task('concat', ['copy-react', 'copy-react-dom'], function() {
     .pipe(babel({
       presets: ["react"],
     }))
+    .on('error', gutil.log)
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));

@@ -11,14 +11,20 @@ $partitionSelectorHeight: 50px;
     border: 1px solid red;
     box-sizing: border-box;
     position: relative;
+    &.resizing {
+      border-color: blue;
+    }
     & .handle {
       position: absolute;
       right: 0;
       top: 0;
       height: $partitionSelectorHeight + 10;
-      width: 2px;
+      width: 10px;
       background-color: orange;
       cursor: ew-resize;
+      &.dragging {
+        background-color: purple;
+      }
     }
   }
 }
