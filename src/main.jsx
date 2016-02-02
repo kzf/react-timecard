@@ -39,7 +39,6 @@ var PartitionSelector = React.createClass({
   },
   
   stopDragHandle: function(event) {
-    console.log('stopDragHandle called');
     if (this.state.draggingHandle !== false) {
       console.log('stopping dragging');
       this.setState({draggingHandle: false});
@@ -71,6 +70,15 @@ var PartitionSelector = React.createClass({
     }
   },
   
+  handleCellClick: function(key, event) {
+    if (event.shiftKey && this.state.partitions.length > 1) {
+      console.log('handled delete cell', key);
+      var partitions = this.state.partitions.concat([]);
+      partitions.splice(key, 1);
+      this.setState({partitions: partitions});
+    }
+  },
+  
   componentDidMount: function() {
     document.addEventListener('mouseup', this.stopDragHandle);
     document.addEventListener('mousemove', this.moveDragHandle);
@@ -89,9 +97,17 @@ var PartitionSelector = React.createClass({
         resizing = partition.resizing ? 'resizing' : ''
         cellClasses = `cell ${resizing}`;
     return (
-      <div ref={(ref) => this.saveCellRef(key, ref)} key={key} className={cellClasses} size={width} style={style} onDoubleClick={(e) => this.splitPartition(key, e)}>
+      <div ref={(ref) => this.saveCellRef(key, ref)}
+           key={key}
+           className={cellClasses}
+           size={width}
+           style={style}
+           onClick={(e) => this.handleCellClick(key, e)}
+           onDoubleClick={(e) => this.splitPartition(key, e)}>
         {partition.name}
-        <div className={handleClasses} onMouseDown={(e) => this.startDragHandle(key, e)}></div>
+        <div className={handleClasses}
+             onMouseDown={(e) => this.startDragHandle(key, e)}>
+        </div>
       </div>
     );
   },
