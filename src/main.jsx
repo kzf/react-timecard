@@ -2,8 +2,11 @@
 var PartitionSelector = React.createClass({
   getInitialState: function() {
     return {
+      // Minimum size of a partition in pixels
       minPartitionPixels: 20,
+      // The {key} of the handle that we are currently dragging
       draggingHandle: false,
+      // Array of partition cells
       partitions: [
         {name: 'A', size: 10},
         {name: 'B', size: 40},
@@ -12,13 +15,22 @@ var PartitionSelector = React.createClass({
       ]
     };
   },
+  
   totalSize: function() {
+    // Sum of sizes of all partitions
     return this.state.partitions.map(p => p.size).reduce((a,b) => a + b, 0);
   },
-  calculatePercentWidth: function(width) {
-    return Math.round(width * 10000) / 100 + '%';
+  
+  percentAsString: function(width) {
+    // Converts 0.42 -> "42%"
+    // Using floor here ensures that we never add up to more than 100%
+    return Math.floor(width * 10000) / 100 + '%';
   },
+  
   splitPartition: function(key, event) {
+    // Split the partition at {key} into two partitions by adding a new
+    // partition to the left and resizing the original and new partition
+    // so that the 
     var partition = this.state.partitions[key],
         boundingRect = event.target.getBoundingClientRect(),
         totalWidth = boundingRect.width,
@@ -33,69 +45,87 @@ var PartitionSelector = React.createClass({
     this.setState({partitions: partitions});
   },
   
-  startDragHandle: function(key, event) {
-    console.log('starting dragging', key);
-    this.setState({draggingHandle: key});
+  deletePartition: function(key, event) {
+    // Delete the partition at {key} and resize the left partition 
+    // (if it exists, otherwise the right partition) so that it takes
+    // up the room of the deleted partition
+    var partitionSize = this.state.partitions[key].size,
+        // neighbourPartitionKey = key > 0 ? key - 1 : key + 1,
+        partitions = this.state.partitions.concat([]);
+    // partitions.splice(key, 1, {name: this.state.partitions[neighbourPartitionKey], size: this.state.partitions[neighbourPartitionKey].size + });
+    partitions.splice(key, 1);
+    this.setState({partitions: partitions});
   },
   
+  resizePartitionWithHandleAt: function(key, handleX) {
+    var leftPartition = this.state.partitions[key],
+        rightPartition = this.state.partitions[key+1],
+        leftCell = this.getCellRef(key),
+        rightCell = this.getCellRef(key+1),
+        leftBounds = leftCell.getBoundingClientRect(),
+        rightBounds = rightCell.getBoundingClientRect(),
+        totalSize = leftPartition.size + rightPartition.size,
+        totalBounds = leftBounds.width + rightBounds.width,
+        leftSizePixels = Math.min(Math.max(handleX - leftBounds.left, this.state.minPartitionPixels), totalBounds - this.state.minPartitionPixels),
+        leftSize = totalSize * leftSizePixels / totalBounds,
+        rightSize = totalSize - leftSize;
+    var partitions = this.state.partitions.concat([]);
+    partitions.splice(key, 2, {name: rightPartition.name, size: rightSize});
+    partitions.splice(key, 0, {name: leftPartition.name, size: leftSize});
+    this.setState({partitions: partitions});
+  },
+  
+  // Set or clear the currently dragged handle state
+  startDragHandle: function(key, event) {
+    this.setState({draggingHandle: key});
+  },
   stopDragHandle: function(event) {
     if (this.state.draggingHandle !== false) {
-      console.log('stopping dragging');
       this.setState({draggingHandle: false});
     }
   },
   
   moveDragHandle: function(event) {
+    // If we are currently dragging one of the handles, move it to
+    // the mouse cursor position
     if (this.state.draggingHandle !== false) {
-      console.log('moving drag handle');
-      var key = this.state.draggingHandle,
-          leftPartition = this.state.partitions[key],
-          rightPartition = this.state.partitions[key+1],
-          leftCell = this.cellRefs[key],
-          rightCell = this.cellRefs[key+1],
-          leftBounds = leftCell.getBoundingClientRect(),
-          rightBounds = rightCell.getBoundingClientRect(),
-          totalSize = leftPartition.size + rightPartition.size,
-          totalBounds = leftBounds.width + rightBounds.width,
-          leftSize = totalSize * (event.clientX - leftBounds.left) / totalBounds,
-          rightSize = totalSize - leftSize;
-      console.log('totalBounds', totalBounds, 'clientX-leftbounds', event.clientX - leftBounds.left);
-      console.log('got left size:', leftSize, 'rightSize: ', rightSize)
-      // console.log('leftbounds', leftBounds);
-      // console.log(event.clientX);
-      var partitions = this.state.partitions.concat([]);
-      partitions.splice(key, 2, {name: rightPartition.name, size: rightSize});
-      partitions.splice(key, 0, {name: leftPartition.name, size: leftSize});
-      this.setState({partitions: partitions});
+      var key = this.state.draggingHandle;
+      this.resizePartitionWithHandleAt(key, )
     }
   },
   
   handleCellClick: function(key, event) {
+    // Delete the clicked partition if it isn't the only partition left
     if (event.shiftKey && this.state.partitions.length > 1) {
-      console.log('handled delete cell', key);
-      var partitions = this.state.partitions.concat([]);
-      partitions.splice(key, 1);
-      this.setState({partitions: partitions});
+      this.deletePartition(key);
     }
   },
   
   componentDidMount: function() {
+    // Register event handlers on the document for mouseup and mousemove since
+    // we want these to fire even the the user is not over our component
     document.addEventListener('mouseup', this.stopDragHandle);
     document.addEventListener('mousemove', this.moveDragHandle);
   },
   
   componentWillUnmount: function() {
+    // Clean up the event handlers!
     document.removeEventListener('mouseup', this.stopDragHandle);
     document.removeEventListener('mousemove', this.moveDragHandle);
   },
   
   renderPartition: function(partition, key, width) {
-    // takes a width in percent e.g. 0.42
-    var style = {width: this.calculatePercentWidth(width)},
+    // Takes a width in percent e.g. 0.42
+    var style = {width: this.percentAsString(width)},
+        resizing = partition.resizing ? 'resizing' : ''
+        cellClasses = `cell ${resizing}`,
         dragging = this.state.draggingHandle === key ? 'dragging' : '',
         handleClasses = `handle ${dragging}`,
-        resizing = partition.resizing ? 'resizing' : ''
-        cellClasses = `cell ${resizing}`;
+        handle = (key === this.state.partitions.length - 1) ? '' : (
+          <div className={handleClasses}
+               onMouseDown={(e) => this.startDragHandle(key, e)}>
+          </div>
+        );
     return (
       <div ref={(ref) => this.saveCellRef(key, ref)}
            key={key}
@@ -105,16 +135,18 @@ var PartitionSelector = React.createClass({
            onClick={(e) => this.handleCellClick(key, e)}
            onDoubleClick={(e) => this.splitPartition(key, e)}>
         {partition.name}
-        <div className={handleClasses}
-             onMouseDown={(e) => this.startDragHandle(key, e)}>
-        </div>
+        {handle}
       </div>
     );
   },
   
+  // Store and get the reference to the DOM node for a cell at index {key}
   saveCellRef: function(key, ref) {
     if (!this.cellRefs) this.cellRefs = [];
     this.cellRefs[key] = ref;
+  },
+  getCellRef: function(key) {
+    return this.cellRefs[key];
   },
   
   render: function() {

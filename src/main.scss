@@ -8,20 +8,21 @@ $partitionSelectorHeight: 50px;
   & .cell {
     float: left;
     height: $partitionSelectorHeight;
-    border: 1px solid red;
-    box-sizing: border-box;
+    background-color: lightpink;
     position: relative;
+    user-select: none;
     &.resizing {
       border-color: blue;
     }
     & .handle {
       position: absolute;
-      right: 0;
+      right: -5px;
       top: 0;
       height: $partitionSelectorHeight + 10;
       width: 10px;
       background-color: orange;
       cursor: ew-resize;
+      z-index: 999;
       &.dragging {
         background-color: purple;
       }
