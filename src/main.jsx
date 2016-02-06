@@ -6,20 +6,16 @@ var PartitionSelector = React.createClass({
       minPartitionPixels: 20,
       // The {key} of the handle that we are currently dragging
       draggingHandle: false,
-      // Array of partition cells
-      partitions: this.props.partitions,
-      handlePartitionChange: this.props.handlePartitionChange,
     };
   },
   
   setPartitions: function(newPartitions) {
-    this.state.handlePartitionChange(newPartitions);
-    this.setState({partitions: newPartitions});
+    this.props.handlePartitionChange(newPartitions);
   },
   
   totalSize: function() {
     // Sum of sizes of all partitions
-    return this.state.partitions.map(p => p.size).reduce((a,b) => a + b, 0);
+    return this.props.partitions.map(p => p.size).reduce((a,b) => a + b, 0);
   },
   
   percentAsString: function(width) {
@@ -32,13 +28,13 @@ var PartitionSelector = React.createClass({
     // Split the partition at {key} into two partitions by adding a new
     // partition to the left and resizing the original and new partition
     // so that the 
-    var partition = this.state.partitions[key],
+    var partition = this.props.partitions[key],
         boundingRect = event.target.getBoundingClientRect(),
         totalWidth = boundingRect.width,
         splitPoint = Math.min(Math.max(event.clientX - boundingRect.left, this.state.minPartitionPixels), totalWidth - this.state.minPartitionPixels),
         leftSize = partition.size * splitPoint / totalWidth,
         rightSize = partition.size - leftSize;
-    var partitions = this.state.partitions.concat([]);
+    var partitions = this.props.partitions.concat([]);
     partitions.splice(key, 1, {name: partition.name, size: rightSize});
     partitions.splice(key, 0, {name: 'N', size: leftSize});
     this.setPartitions(partitions);
@@ -48,17 +44,17 @@ var PartitionSelector = React.createClass({
     // Delete the partition at {key} and resize the left partition 
     // (if it exists, otherwise the right partition) so that it takes
     // up the room of the deleted partition
-    var partitionSize = this.state.partitions[key].size,
+    var partitionSize = this.props.partitions[key].size,
         neighbourPartitionKey = key > 0 ? key - 1 : key + 1,
-        partitions = this.state.partitions.concat([]);
-    partitions.splice(key, 1, {name: this.state.partitions[neighbourPartitionKey], size: this.state.partitions[neighbourPartitionKey].size + partitionSize});
+        partitions = this.props.partitions.concat([]);
+    partitions.splice(key, 1, {name: this.props.partitions[neighbourPartitionKey], size: this.props.partitions[neighbourPartitionKey].size + partitionSize});
     partitions.splice(key, 1);
     this.setPartitions(partitions);
   },
   
   resizePartitionWithHandleAt: function(key, handleX) {
-    var leftPartition = this.state.partitions[key],
-        rightPartition = this.state.partitions[key+1],
+    var leftPartition = this.props.partitions[key],
+        rightPartition = this.props.partitions[key+1],
         leftCell = this.getCellRef(key),
         rightCell = this.getCellRef(key+1),
         leftBounds = leftCell.getBoundingClientRect(),
@@ -68,7 +64,7 @@ var PartitionSelector = React.createClass({
         leftSizePixels = Math.min(Math.max(handleX - leftBounds.left, this.state.minPartitionPixels), totalBounds - this.state.minPartitionPixels),
         leftSize = totalSize * leftSizePixels / totalBounds,
         rightSize = totalSize - leftSize;
-    var partitions = this.state.partitions.concat([]);
+    var partitions = this.props.partitions.concat([]);
     partitions.splice(key, 2, {name: rightPartition.name, size: rightSize});
     partitions.splice(key, 0, {name: leftPartition.name, size: leftSize});
     this.setPartitions(partitions);
@@ -95,7 +91,7 @@ var PartitionSelector = React.createClass({
   
   handleCellClick: function(key, event) {
     // Delete the clicked partition if it isn't the only partition left
-    if (event.shiftKey && this.state.partitions.length > 1) {
+    if (event.shiftKey && this.props.partitions.length > 1) {
       this.deletePartition(key);
     }
   },
@@ -120,7 +116,7 @@ var PartitionSelector = React.createClass({
         cellClasses = `cell ${resizing}`,
         dragging = this.state.draggingHandle === key ? 'dragging' : '',
         handleClasses = `handle ${dragging}`,
-        handle = (key === this.state.partitions.length - 1) ? '' : (
+        handle = (key === this.props.partitions.length - 1) ? '' : (
           <div className={handleClasses}
                onMouseDown={(e) => this.startDragHandle(key, e)}>
           </div>
@@ -150,7 +146,7 @@ var PartitionSelector = React.createClass({
   
   render: function() {
     var totalSize = this.totalSize();
-    var partitions = this.state.partitions.map(function(partition, i) {
+    var partitions = this.props.partitions.map(function(partition, i) {
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
     return (
@@ -168,9 +164,9 @@ var Timesheet = React.createClass({
     return {
       partitions: [
         {name: 'A', size: 10},
-        {name: 'B', size: 40},
-        {name: 'C', size: 20},
-        {name: 'D', size: 10},
+        {name: 'B', size: 20},
+        {name: 'C', size: 40},
+        {name: 'D', size: 5},
       ],
     };
   },
@@ -180,8 +176,8 @@ var Timesheet = React.createClass({
   },
   
   render: function() {
-    var list = this.state.partitions.map((p) => (
-      <li>Partition {p.name}: size {p.size}</li>
+    var list = this.state.partitions.map((p, i) => (
+      <li key={i}>Partition {p.name}: size {p.size}</li>
     ));
     return (
       <div>
@@ -189,6 +185,36 @@ var Timesheet = React.createClass({
         <ul>
           {list}
         </ul>
+        <TimesheetTable partitions={this.state.partitions} handlePartitionChange={this.handlePartitionChange} />
+      </div>
+    );
+  }
+});
+
+var TimesheetTable = React.createClass({
+  getInitialState: function() {
+    return {
+      
+    };
+  },
+  
+  updatePartitionSize: function() {
+    
+  },
+  
+  render: function() {
+    return (
+      <div>
+        <table>
+          <tbody>
+            {this.props.partitions.map((p, i) => (
+              <tr key={i}>
+                <td>{p.name} ({i})</td>
+                <td><input type="text" value={p.size} onChange={(e) => this.updatePartitionSize(i, e.value)} /></td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     );
   }
