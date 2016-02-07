@@ -149,6 +149,7 @@ var PartitionSelector = React.createClass({
     var partitions = this.props.partitions.map(function(partition, i) {
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
+    console.log('total size', totalSize);
     return (
       <div className="partition-selector">
         {partitions}
@@ -198,24 +199,62 @@ var TimesheetTable = React.createClass({
     };
   },
   
-  updatePartitionSize: function() {
-    
+  updatePartitionSize: function(key, value) {
+    console.log('updating partition size', key, value);
+    var partitions = this.props.partitions.concat([]);
+    partitions.splice(key, 1, {name: this.props.partitions[key].name, size: parseInt(value)});
+    this.props.handlePartitionChange(partitions);
+    this.setState({partitions: partitions});
   },
   
   render: function() {
+    console.log('re-rendering timesheet table');
     return (
       <div>
         <table>
           <tbody>
             {this.props.partitions.map((p, i) => (
-              <tr key={i}>
-                <td>{p.name} ({i})</td>
-                <td><input type="text" value={p.size} onChange={(e) => this.updatePartitionSize(i, e.value)} /></td>
-              </tr>
+              <TimesheetTableRow key={i} index={i} name={p.name} value={p.size} handleChange={(i, value) => this.updatePartitionSize(i, value)} />
             ))}
           </tbody>
         </table>
       </div>
+    );
+  }
+});
+
+var TimesheetTableRow = React.createClass({
+  getInitialState: function() {
+    return {
+      nonIntValue: undefined,
+    };
+  },
+  
+  handleChange: function(i, value) {
+    var intValue = parseInt(value);
+    if (intValue) {
+      console.log('handleChange', i, value);
+      this.props.handleChange(i, value);
+      this.clearNonIntValue());
+    } else {
+      this.setState({nonIntValue: value});
+    }
+  },
+  
+  clearNonIntValue: function() {
+    this.setState({nonIntValue: undefined});
+  },
+  
+  render: function() {
+    var value = this.state.nonIntValue;
+    if (value === undefined) {
+      value = this.props.value;
+    }
+    return (
+      <tr>
+        <td>{this.props.name}</td>
+        <td><input type="text" value={value} onChange={(e) => this.handleChange(this.props.index, e.target.value)} onBlur={this.clearNonIntValue}/></td>
+      </tr>
     );
   }
 });
