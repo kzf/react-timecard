@@ -62,7 +62,11 @@ gulp.task('concat', ['copy-react', 'copy-react-dom'], function() {
     .pipe(babel({
       presets: ["react"],
     }))
-    .on('error', gutil.log)
+    .on('error', function swallowError (error) {
+        // If you want details of the error in the console
+        console.log(error.toString())
+        this.emit('end')
+      })
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));
