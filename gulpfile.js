@@ -30,6 +30,7 @@ var jsFiles = {
 
   ],
   source: [
+    'src/*/*.jsx',
     'src/main.jsx',
   ]
 };
