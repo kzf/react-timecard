@@ -109,6 +109,22 @@ var PartitionSelector = React.createClass({
     document.removeEventListener('mousemove', this.moveDragHandle);
   },
   
+  renderMarkers: function(markers, className, totalSize) {
+    var lastMarker, markerStep;
+    if (typeof markers === 'number') {
+      lastMarker = markers;
+      markerStep = markers;
+      markers = [];
+      while (lastMarker < totalSize) {
+        markers.push(lastMarker);
+        lastMarker += markerStep;
+      }
+    }
+    return markers.map((m, i) => (
+      <div key={i} className={'marker '+className} style={{left: this.percentAsString(m/totalSize)}}></div>
+    ));
+  },
+  
   renderPartition: function(partition, key, width) {
     // Takes a width in percent e.g. 0.42
     var style = {width: this.percentAsString(width)},
@@ -145,14 +161,16 @@ var PartitionSelector = React.createClass({
   },
   
   render: function() {
-    var totalSize = this.totalSize();
-    var partitions = this.props.partitions.map(function(partition, i) {
+    var totalSize = this.totalSize(),
+        partitions = this.props.partitions.map(function(partition, i) {
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
     console.log('total size', totalSize);
     return (
       <div className="partition-selector">
         {partitions}
+        {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
+        {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
       </div>
     );
   }
@@ -182,7 +200,7 @@ var Timesheet = React.createClass({
     ));
     return (
       <div>
-        <PartitionSelector partitions={this.state.partitions} handlePartitionChange={this.handlePartitionChange} />
+        <PartitionSelector partitions={this.state.partitions} handlePartitionChange={this.handlePartitionChange} minorMarkers={4} majorMarkers={12} />
         <ul>
           {list}
         </ul>
@@ -235,7 +253,7 @@ var TimesheetTableRow = React.createClass({
     if (intValue) {
       console.log('handleChange', i, value);
       this.props.handleChange(i, value);
-      this.clearNonIntValue());
+      this.clearNonIntValue();
     } else {
       this.setState({nonIntValue: value});
     }

@@ -1,6 +1,7 @@
 $partitionSelectorHeight: 50px;
 
 .partition-selector {
+  position: relative;
   width: 100%;
   height: $partitionSelectorHeight + 2;
   border: 1px solid black;
@@ -26,6 +27,17 @@ $partitionSelectorHeight: 50px;
       &.dragging {
         background-color: purple;
       }
+    }
+  }
+  & .marker {
+    position: absolute;
+    bottom: 0;
+    height: 20px;
+    width: 1px;
+    background-color: black;
+    &.marker-major {
+      width: 2px;
+      height: 30px;
     }
   }
 }
