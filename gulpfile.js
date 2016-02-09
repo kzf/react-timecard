@@ -30,6 +30,7 @@ var jsFiles = {
 
   ],
   source: [
+    'node_modules/randomcolor/randomColor.js',
     'src/*/*.jsx',
     'src/main.jsx',
   ]

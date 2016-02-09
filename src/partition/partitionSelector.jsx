@@ -5,6 +5,7 @@ var PartitionSelector = React.createClass({
       minPartitionPixels: 20,
       // The {key} of the handle that we are currently dragging
       draggingHandle: false,
+      colorGenerator: this.props.colorGenerator || new ColorGenerator()
     };
   },
   
@@ -34,8 +35,8 @@ var PartitionSelector = React.createClass({
         leftSize = partition.size * splitPoint / totalWidth,
         rightSize = partition.size - leftSize;
     var partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 1, {name: partition.name, size: rightSize});
-    partitions.splice(key, 0, {name: 'N', size: leftSize});
+    partitions.splice(key, 1, {value: partition.value, size: rightSize});
+    partitions.splice(key, 0, {value: 'N', size: leftSize});
     this.setPartitions(partitions);
   },
   
@@ -46,7 +47,7 @@ var PartitionSelector = React.createClass({
     var partitionSize = this.props.partitions[key].size,
         neighbourPartitionKey = key > 0 ? key - 1 : key + 1,
         partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 1, {name: this.props.partitions[neighbourPartitionKey], size: this.props.partitions[neighbourPartitionKey].size + partitionSize});
+    partitions.splice(key, 1, {value: this.props.partitions[neighbourPartitionKey].value, size: this.props.partitions[neighbourPartitionKey].size + partitionSize});
     partitions.splice(key, 1);
     this.setPartitions(partitions);
   },
@@ -64,8 +65,8 @@ var PartitionSelector = React.createClass({
         leftSize = totalSize * leftSizePixels / totalBounds,
         rightSize = totalSize - leftSize;
     var partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 2, {name: rightPartition.name, size: rightSize});
-    partitions.splice(key, 0, {name: leftPartition.name, size: leftSize});
+    partitions.splice(key, 2, {value: rightPartition.value, size: rightSize});
+    partitions.splice(key, 0, {value: leftPartition.value, size: leftSize});
     this.setPartitions(partitions);
   },
   
@@ -126,7 +127,10 @@ var PartitionSelector = React.createClass({
   
   renderPartition: function(partition, key, width) {
     // Takes a width in percent e.g. 0.42
-    var style = {width: this.percentAsString(width)},
+    var style = {
+          width: this.percentAsString(width),
+          backgroundColor: this.state.colorGenerator.getColor(partition.value),
+        },
         resizing = partition.resizing ? 'resizing' : ''
         cellClasses = `cell ${resizing}`,
         dragging = this.state.draggingHandle === key ? 'dragging' : '',
@@ -144,7 +148,7 @@ var PartitionSelector = React.createClass({
            style={style}
            onClick={(e) => this.handleCellClick(key, e)}
            onDoubleClick={(e) => this.splitPartition(key, e)}>
-        {partition.name}
+        {partition.value}
         {handle}
       </div>
     );

@@ -1,17 +1,32 @@
 var Timesheet = React.createClass({
   getInitialState: function() {
     return {
+      workHours: [
+        {value: 'Not Working', size: 120},
+        {value: 'Working', size: 210},
+        {value: 'Not Working', size: 60},
+        {value: 'Working', size: 240},
+        {value: 'Not Working', size: 90},
+      ],
       partitions: [
-        {name: 'A', size: 10},
-        {name: 'B', size: 20},
-        {name: 'C', size: 40},
-        {name: 'D', size: 5},
+        {value: 'A', size: 10},
+        {value: 'B', size: 20},
+        {value: 'C', size: 40},
+        {value: 'D', size: 5},
       ],
     };
   },
   
+  handleWorkHoursChange: function(newWorkHours) {
+    this.setState({workHours: newWorkHours});
+  },
+  
   handlePartitionChange: function(newPartitions) {
     this.setState({partitions: newPartitions});
+  },
+  
+  validateWorkHours: function(workHours) {
+    
   },
   
   render: function() {
@@ -20,6 +35,8 @@ var Timesheet = React.createClass({
     ));
     return (
       <div>
+        <PartitionSelector partitions={this.state.workHours} handlePartitionChange={this.handleWorkHoursChange} validatePartition={this.validateWorkHours} minorMarkers={15} majorMarkers={60} />
+        
         <PartitionSelector partitions={this.state.partitions} handlePartitionChange={this.handlePartitionChange} minorMarkers={4} majorMarkers={12} />
         <ul>
           {list}

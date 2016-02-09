@@ -17,6 +17,7 @@
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.7",
+    "randomcolor": "^0.4.4",
     "react": "^15.2.1",
     "react-dom": "^15.2.1"
   },
