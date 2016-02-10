@@ -112,6 +112,10 @@ gulp.task('watch', function() {
 // BrowserSync
 gulp.task('browsersync', function() {
   browserSync({
+    port: 8080,
+    ui: { 
+      port: 8081,
+    },
     server: {
       baseDir: './'
     },

@@ -3,16 +3,16 @@ var Timesheet = React.createClass({
     return {
       workHours: [
         {value: 'Not Working', size: 120},
-        {value: 'Working', size: 210},
+        {value: 'Working', size: 210, tooltip: 'Work Time'},
         {value: 'Not Working', size: 60},
-        {value: 'Working', size: 240},
+        {value: 'Working', size: 240, tooltip: 'Work Time'},
         {value: 'Not Working', size: 90},
       ],
       partitions: [
-        {value: 'A', size: 10},
-        {value: 'B', size: 20},
-        {value: 'C', size: 40},
-        {value: 'D', size: 5},
+        {value: 'A', size: 10, tooltip: 'First Partition'},
+        {value: 'B', size: 20, tooltip: 'Second Partition'},
+        {value: 'C', size: 40, tooltip: 'C Partition'},
+        {value: 'D', size: 5, tooltip: 'LAST Partition'},
       ],
     };
   },

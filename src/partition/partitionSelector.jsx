@@ -35,8 +35,8 @@ var PartitionSelector = React.createClass({
         leftSize = partition.size * splitPoint / totalWidth,
         rightSize = partition.size - leftSize;
     var partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 1, {value: partition.value, size: rightSize});
-    partitions.splice(key, 0, {value: 'N', size: leftSize});
+    partitions.splice(key, 1, {value: partition.value, tooltip: partition.tooltip, size: rightSize});
+    partitions.splice(key, 0, {size: leftSize});
     this.setPartitions(partitions);
   },
   
@@ -46,8 +46,9 @@ var PartitionSelector = React.createClass({
     // up the room of the deleted partition
     var partitionSize = this.props.partitions[key].size,
         neighbourPartitionKey = key > 0 ? key - 1 : key + 1,
+        neighbourPartition = this.props.partitions[neighbourPartitionKey],
         partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 1, {value: this.props.partitions[neighbourPartitionKey].value, size: this.props.partitions[neighbourPartitionKey].size + partitionSize});
+    partitions.splice(key, 1, {value: neighbourPartition.value, tooltip: neighbourPartition.tooltip, size: neighbourPartition.size + partitionSize});
     partitions.splice(key, 1);
     this.setPartitions(partitions);
   },
@@ -65,8 +66,8 @@ var PartitionSelector = React.createClass({
         leftSize = totalSize * leftSizePixels / totalBounds,
         rightSize = totalSize - leftSize;
     var partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 2, {value: rightPartition.value, size: rightSize});
-    partitions.splice(key, 0, {value: leftPartition.value, size: leftSize});
+    partitions.splice(key, 2, {value: rightPartition.value, tooltip: rightPartition.tooltip, size: rightSize});
+    partitions.splice(key, 0, {value: leftPartition.value, tooltip: leftPartition.tooltip, size: leftSize});
     this.setPartitions(partitions);
   },
   
@@ -127,7 +128,8 @@ var PartitionSelector = React.createClass({
   
   renderPartition: function(partition, key, width) {
     // Takes a width in percent e.g. 0.42
-    var style = {
+    var tooltip,
+        style = {
           width: this.percentAsString(width),
           backgroundColor: this.state.colorGenerator.getColor(partition.value),
         },
@@ -140,6 +142,11 @@ var PartitionSelector = React.createClass({
                onMouseDown={(e) => this.startDragHandle(key, e)}>
           </div>
         );
+    // We hide tooltips while dragging. Cells without a tooltip get no tooltip
+    // instead of an empty one.
+    if ((this.state.draggingHandle === false) && partition.tooltip) {
+      tooltip = <div className="cell-tooltip">{partition.tooltip}</div>;
+    }
     return (
       <div ref={(ref) => this.saveCellRef(key, ref)}
            key={key}
@@ -150,6 +157,7 @@ var PartitionSelector = React.createClass({
            onDoubleClick={(e) => this.splitPartition(key, e)}>
         {partition.value}
         {handle}
+        {tooltip}
       </div>
     );
   },

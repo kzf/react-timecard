@@ -1,11 +1,18 @@
 class ColorGenerator {
   constructor() {
     this.colorMap = {};
+    this.colorPool = [];
   }
   
   getColor(key) {
     if (!this.colorMap[key]) {
-      this.colorMap[key] = randomColor();
+      if (this.colorPool.length === 0) {
+        this.colorPool = randomColor({
+           luminosity: 'light',
+           count: 40
+        });
+      }
+      this.colorMap[key] = this.colorPool.pop();
     }
     return this.colorMap[key];
   }

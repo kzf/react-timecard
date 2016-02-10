@@ -1,11 +1,16 @@
 $partitionSelectorHeight: 50px;
 
+body, html {
+  font-family: Arial, sans-serif;
+}
+
 .partition-selector {
   position: relative;
   width: 100%;
   height: $partitionSelectorHeight + 2;
   border: 1px solid black;
   box-sizing: border-box;
+  margin-bottom: 9px;
   & .cell {
     float: left;
     height: $partitionSelectorHeight;
@@ -17,16 +22,70 @@ $partitionSelectorHeight: 50px;
     }
     & .handle {
       position: absolute;
-      right: -5px;
+      right: 0;
       top: 0;
-      height: $partitionSelectorHeight + 10;
-      width: 10px;
-      background-color: orange;
+      height: $partitionSelectorHeight;
+      width: 1px;
+      background-color: black;
       cursor: ew-resize;
       z-index: 999;
+      &::after {
+        content: "";
+        width: 11px;
+        position: absolute;
+        left: -5px;
+        top: 0;
+        height: 100%;
+        background-color: #fff;
+        opacity: 0;
+      }
+      &::before {
+        content: "";
+        position: absolute;
+        bottom: -7px;
+        left: -5px;
+        width: 0;
+        height: 0;
+        border: 0 solid transparent;
+        border-left-width: 5px;
+        border-right-width: 5px;
+        border-bottom-width: 5px;
+        border-bottom-color: black;
+      }
       &.dragging {
         background-color: purple;
       }
+    }
+    & .cell-tooltip {
+      position: absolute;
+      left: 50%;
+      top: 100%;
+      transform: translateX(-50%);
+      text-align: center;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: #fff;
+      font-size: 0.8em;
+      padding: 4px 8px;
+      margin-top: 6px;
+      border-radius: 6px;
+      display: none;
+      z-index: 999;
+      &::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border: 0 solid transparent;
+        border-bottom-width: 5px;
+        border-left-width: 5px;
+        border-right-width: 5px;
+        border-bottom-color: rgba(0, 0, 0, 0.8);
+        position: absolute;
+        top: -5px;
+        left: calc(50% - 5px);
+      }
+    }
+    &:hover .cell-tooltip {
+      display: block;
     }
   }
   & .marker {
@@ -35,6 +94,7 @@ $partitionSelectorHeight: 50px;
     height: 20px;
     width: 1px;
     background-color: black;
+    pointer-events: none;
     &.marker-major {
       width: 2px;
       height: 30px;
