@@ -11,6 +11,10 @@ body, html {
   border: 1px solid black;
   box-sizing: border-box;
   margin-bottom: 9px;
+  &.invalid {
+    border-color: red;
+    box-shadow: 0 0 5px red;
+  }
   & .cell {
     float: left;
     height: $partitionSelectorHeight;

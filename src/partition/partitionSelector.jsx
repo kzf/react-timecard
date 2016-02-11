@@ -5,12 +5,26 @@ var PartitionSelector = React.createClass({
       minPartitionPixels: 20,
       // The {key} of the handle that we are currently dragging
       draggingHandle: false,
-      colorGenerator: this.props.colorGenerator || new ColorGenerator()
+      colorGenerator: this.props.colorGenerator || new ColorGenerator(),
+      // valid flag used if validatePartitions param is passed
+      valid: true
     };
+    this.validatePartitions();
+  },
+  
+  validatePartitions: function() {
+    if (this.props.validatePartitions) {
+      if (this.props.validatePartitions(this.props.partitions)) {
+        this.setState({valid: true});
+      } else {
+        this.setState({valid: false});
+      }
+    }
   },
   
   setPartitions: function(newPartitions) {
     this.props.handlePartitionChange(newPartitions);
+    this.validatePartitions();
   },
   
   totalSize: function() {
@@ -177,7 +191,7 @@ var PartitionSelector = React.createClass({
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
     return (
-      <div className="partition-selector">
+      <div className={`partition-selector ${this.state.valid ? 'valid' : 'invalid'}`}>
         {partitions}
         {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
         {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}

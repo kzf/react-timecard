@@ -1,4 +1,6 @@
 var Timesheet = React.createClass({
+  MIN_WORK_MINUTES: 7.5 * 60,
+  
   getInitialState: function() {
     return {
       workHours: [
@@ -26,7 +28,7 @@ var Timesheet = React.createClass({
   },
   
   validateWorkHours: function(workHours) {
-    
+    return workHours.filter((p) => p.value === 'Working').reduce((a,b) => a + b.size, 0) >= this.MIN_WORK_MINUTES;
   },
   
   render: function() {
@@ -35,9 +37,16 @@ var Timesheet = React.createClass({
     ));
     return (
       <div>
-        <PartitionSelector partitions={this.state.workHours} handlePartitionChange={this.handleWorkHoursChange} validatePartition={this.validateWorkHours} minorMarkers={15} majorMarkers={60} />
+        <PartitionSelector partitions={this.state.workHours}
+                           handlePartitionChange={this.handleWorkHoursChange}
+                           validatePartitions={this.validateWorkHours}
+                           minorMarkers={15}
+                           majorMarkers={60} />
         
-        <PartitionSelector partitions={this.state.partitions} handlePartitionChange={this.handlePartitionChange} minorMarkers={4} majorMarkers={12} />
+        <PartitionSelector partitions={this.state.partitions}
+                           handlePartitionChange={this.handlePartitionChange}
+                           minorMarkers={60}
+                           majorMarkers={120} />
         <ul>
           {list}
         </ul>
