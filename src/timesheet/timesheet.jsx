@@ -45,6 +45,7 @@ var Timesheet = React.createClass({
         
         <PartitionSelector partitions={this.state.partitions}
                            handlePartitionChange={this.handlePartitionChange}
+                           labels={[['test', 10], ['test2', 30]]}
                            minorMarkers={60}
                            majorMarkers={120} />
         <ul>

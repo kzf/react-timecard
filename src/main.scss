@@ -104,4 +104,12 @@ body, html {
       height: 30px;
     }
   }
+  & .label {
+    position: absolute;
+    top: 100%;
+    font-size: 80%;
+    color: black;
+    transform: translateX(-50%);
+    user-select: none;
+  }
 }

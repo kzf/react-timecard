@@ -125,6 +125,7 @@ var PartitionSelector = React.createClass({
   },
   
   renderMarkers: function(markers, className, totalSize) {
+    if (!markers) return;
     var lastMarker, markerStep;
     if (typeof markers === 'number') {
       lastMarker = markers;
@@ -137,6 +138,13 @@ var PartitionSelector = React.createClass({
     }
     return markers.map((m, i) => (
       <div key={i} className={'marker '+className} style={{left: this.percentAsString(m/totalSize)}}></div>
+    ));
+  },
+  
+  renderLabels: function(labels, totalSize) {
+    if (!labels) return;
+    return labels.map((label, i) => (
+      <div key={i} className={'label'} style={{left: this.percentAsString(label[1]/totalSize)}}>{label[0]}</div>
     ));
   },
   
@@ -195,6 +203,7 @@ var PartitionSelector = React.createClass({
         {partitions}
         {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
         {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
+        {this.renderLabels(this.props.labels, totalSize)}
       </div>
     );
   }
