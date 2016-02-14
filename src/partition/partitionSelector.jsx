@@ -63,7 +63,7 @@ var PartitionSelector = React.createClass({
         neighbourPartition = this.props.partitions[neighbourPartitionKey],
         partitions = this.props.partitions.concat([]);
     partitions.splice(key, 1, {value: neighbourPartition.value, tooltip: neighbourPartition.tooltip, size: neighbourPartition.size + partitionSize});
-    partitions.splice(key, 1);
+    partitions.splice(neighbourPartitionKey, 1);
     this.setPartitions(partitions);
   },
   
@@ -177,7 +177,6 @@ var PartitionSelector = React.createClass({
            style={style}
            onClick={(e) => this.handleCellClick(key, e)}
            onDoubleClick={(e) => this.splitPartition(key, e)}>
-        {partition.value}
         {handle}
         {tooltip}
       </div>

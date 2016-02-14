@@ -13,8 +13,18 @@ Time.prototype.lessThanEq = function(time) {
   return false;
 };
 
+Time.prototype.lessThan = function(time) {
+  if (this.hour < time.hour) return true;
+  if (this.hour === time.hour && this.minute < time.minute) return true;
+  return false;
+};
+
 Time.prototype.minutesAfter = function(time) {
   return (this.hour - time.hour)*60 + (this.minute - time.minute);
+};
+
+Time.prototype.getNextHourMark = function() {
+  return new Time(this.hour + 1, 0);
 };
 
 Time.prototype.getNextHalfHourMark = function() {

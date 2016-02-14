@@ -10,7 +10,7 @@ body, html {
   height: $partitionSelectorHeight + 2;
   border: 1px solid black;
   box-sizing: border-box;
-  margin-bottom: 9px;
+  margin-bottom: 18px;
   &.invalid {
     border-color: red;
     box-shadow: 0 0 5px red;
@@ -106,8 +106,8 @@ body, html {
   }
   & .label {
     position: absolute;
-    top: 100%;
-    font-size: 80%;
+    top: calc(100% + 5px);
+    font-size: 60%;
     color: black;
     transform: translateX(-50%);
     user-select: none;
