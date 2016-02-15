@@ -34,6 +34,10 @@ var Timesheet = React.createClass({
     this.setState({partitions: newPartitions});
   },
   
+  handleTimesChange: function(newTimes) {
+    this.setState({partitions: this.converter.calculatePartitionsForTimes(newTimes)});
+  },
+  
   validateWorkHours: function(workHours) {
     return workHours.filter((p) => p.value).reduce((a,b) => a + b.size, 0) >= this.MIN_WORK_MINUTES;
   },
@@ -68,7 +72,8 @@ var Timesheet = React.createClass({
         <ul>
           {timesUL}
         </ul>
-        <TimesheetTable partitions={this.state.partitions} handlePartitionChange={this.handlePartitionChange} />
+        <TimesheetTable times={times}
+                        handleTimesChange={this.handleTimesChange} />
       </div>
     );
   }

@@ -1,13 +1,14 @@
 var TimesheetTable = React.createClass({
   getInitialState: function() {
     return {
-      
     };
   },
   
-  updatePartitionSize: function(key, value) {
-    var partitions = this.props.partitions.concat([]);
-    partitions.splice(key, 1, {name: this.props.partitions[key].name, size: parseInt(value)});
+  handleTimeChange: function(attr, key, value) {
+    var times = this.props.times.concat([]),
+        newTimeRow = Object.assign({}, this.props.times[key]);
+    newTimeRow[attr] = new Time(value);
+    times.splice(key, 1, {name: this.props.times[key].name, size: parseInt(value)});
     this.props.handlePartitionChange(partitions);
     this.setState({partitions: partitions});
   },
@@ -15,10 +16,15 @@ var TimesheetTable = React.createClass({
   render: function() {
     return (
       <div>
-        <table>
+        <table className="timesheet-table">
           <tbody>
-            {this.props.partitions.map((p, i) => (
-              <TimesheetTableRow key={i} index={i} name={p.name} value={p.size} handleChange={(i, value) => this.updatePartitionSize(i, value)} />
+            {this.props.times.map((t, i) => (
+              <TimesheetTableRow key={i}
+                                 index={i}
+                                 name={t.value}
+                                 startTime={t.startTime}
+                                 endTime={t.endTime}
+                                 handleTimeChange={(attr, i, value) => this.handleTimeChange(attr, i, value)} />
             ))}
           </tbody>
         </table>

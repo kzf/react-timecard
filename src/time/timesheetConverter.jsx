@@ -10,14 +10,7 @@ class TimesheetConverter {
     return labels;
   }
   
-  calculateTimesForPartitions(partitions, timeBreaks) {
-    // e.g. take partitions: [{value:'A', size: 10}, {value:'B', size: 20}, {value:'C', size: 30}],
-    //           timeBreaks: [[Time(7.0), Time(7,30)], [Time(8,30), Time(9.0)]]
-    // and return [{value: 'A', startTime: 7:00, endTime: 7:10}, 
-    //             {value: 'B', startTime: 7:10, endTime: 7:30},
-    //             {value: 'C', startTime: 8:00, endTime: 8:30}]
-    // ASSUMPTION: partition total size equals timeBreaks total size
-    
+  splitPartitionsFromTimeBreaks(partitions, timeBreaks) {
     // Split any partitions that overlap the boundaries between timeBreaks
     // into a portion before the gap and a portion after
     var splitPartitions = [],
@@ -29,7 +22,7 @@ class TimesheetConverter {
         splitPartitions.push({value: partition.value, size: size});
         minutesLeftInBreak -= size;
       } else {
-        // TODO: Handle the case where a cell is overlapping TWO time breaks
+        // TODO: Handle the case where a cell is overlapping TWO or more time breaks
         splitPartitions.push({value: partition.value, size: minutesLeftInBreak});
         splitPartitions.push({value: partition.value, size: size - minutesLeftInBreak});
         currentBreakIndex++;
@@ -37,8 +30,13 @@ class TimesheetConverter {
         minutesLeftInBreak = timeBreaks[currentBreakIndex][1].minutesAfter(timeBreaks[currentBreakIndex][0]) - (size - minutesLeftInBreak);
       }
     });
-    
-    // Now create the times array assuming we always end at a nice gap
+    return splitPartitions;
+  }
+  
+  calculateTimesForSplitPartitions(splitPartitions, timeBreaks) {
+    // ASSUMPTION: the boundaries of timeBreaks always line up exactly
+    // with a boundary between two cells in splitPartitions i.e.
+    // we never have a partition cell that overlaps a boundary
     var times = [],
         lastEndTime,
         breakEndTime,
@@ -59,6 +57,19 @@ class TimesheetConverter {
       currentBreakIndex++;
     }
     return times;
+  }
+  
+  calculateTimesForPartitions(partitions, timeBreaks) {
+    // e.g. take partitions: [{value:'A', size: 10}, {value:'B', size: 20}, {value:'C', size: 30}],
+    //           timeBreaks: [[Time(7.0), Time(7,30)], [Time(8,30), Time(9.0)]]
+    // and return [{value: 'A', startTime: 7:00, endTime: 7:10}, 
+    //             {value: 'B', startTime: 7:10, endTime: 7:30},
+    //             {value: 'C', startTime: 8:00, endTime: 8:30}]
+    // ASSUMPTION: partition total size equals timeBreaks total size
+    return calculateTimesForSplitPartitions(
+      splitPartitionsFromTimeBreaks(partitions, timeBreaks),
+      timeBreaks
+    );
   }
   
   calculatePartitionsForTimes(times, timeBreaks) {

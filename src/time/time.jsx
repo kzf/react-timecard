@@ -1,11 +1,21 @@
 var Time = function(hour, minute, ampm) {
-  this.hour = parseInt(hour);
-  this.minute = parseInt(minute);
-  if (ampm && ampm.toLowerCase() === 'pm' && this.hour !== 12) {
-    this.hour += 12;
+  if (minute) {
+    this.hour = parseInt(hour);
+    this.minute = parseInt(minute);
+    if (ampm && ampm.toLowerCase() === 'pm' && this.hour !== 12) {
+      this.hour += 12;
+    }
+  } else {
+    var x = hour.split(':');
+    this.hour = x[0];
+    this.minute = x[1];
   }
   return this;
 }
+
+Time.from24String = function(str) {
+  
+};
 
 Time.prototype.lessThanEq = function(time) {
   if (this.hour < time.hour) return true;
