@@ -71,7 +71,7 @@ Time.prototype.toString24 = function() {
 Time.prototype.minutesToString = function() {
   if (this.minute === 0) {
     return '00';
-  } else if (this.minute < 9) {
+  } else if (this.minute <= 9) {
     return '0' + this.minute;
   } else {
     return this.minute;
