@@ -1,5 +1,5 @@
 var Time = function(hour, minute, ampm) {
-  if (minute) {
+  if (typeof minute !== 'undefined') {
     this.hour = parseInt(hour);
     this.minute = parseInt(minute);
     if (ampm && ampm.toLowerCase() === 'pm' && this.hour !== 12) {
@@ -7,15 +7,11 @@ var Time = function(hour, minute, ampm) {
     }
   } else {
     var x = hour.split(':');
-    this.hour = x[0];
-    this.minute = x[1];
+    this.hour = parseInt(x[0]);
+    this.minute = parseInt(x[1]);
   }
   return this;
 }
-
-Time.from24String = function(str) {
-  
-};
 
 Time.prototype.lessThanEq = function(time) {
   if (this.hour < time.hour) return true;
@@ -112,7 +108,7 @@ Time.prototype.addMinutes = function(x) {
   } else {
     m += rem;
   }
-  if (m > 60) {
+  if (m >= 60) {
     m = m - 60;
     h = h + 1;
   }

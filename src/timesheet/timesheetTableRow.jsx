@@ -5,17 +5,17 @@ var TimesheetTableRow = React.createClass({
     };
   },
   
-  handleTimeChange: function(attr, i, value) {
+  handleEndTimeChange: function(i, value) {
     // time inputs always return a blank value if they are invalid
-    var isValidTime = !!value,
+    var isValidTime = value && this.props.startTime.lessThanEq(new Time(value)),
         nonTimeValues;
     
     if (isValidTime) {
-      this.props.handleTimeChange(attr, i, value);
-      this.clearNonIntValue();
+      this.props.handleEndTimeChange(i, value);
+      this.clearNonTimeValue();
     } else {
       nonTimeValues = {};
-      nonTimeValues[attr] = value;
+      nonTimeValues.endTime = value;
       this.setState({nonTimeValues: nonTimeValues});
     }
   },
@@ -26,23 +26,21 @@ var TimesheetTableRow = React.createClass({
   
   render: function() {
     var values = Object.assign({}, this.state.nonTimeValues);
-    if (values.startTime === undefined) values.startTime = this.props.startTime.toString24();
     if (values.endTime === undefined) values.endTime = this.props.endTime.toString24();
     return (
       <tr>
         <td>{this.props.name}</td>
         <td>
           <input type="time"
-                 className={`${this.state.nonTimeValues && this.state.nonTimeValues.startTime ? 'invalid' : 'valid'}`}
-                 value={values.startTime}
-                 onChange={(e) => this.handleTimeChange('startTime', this.props.index, e.target.value)}
-                 onBlur={this.clearNonTimeValue}/>
+                 className="valid"
+                 value={this.props.startTime.toString24()}
+                 readOnly="readonly" />
         </td>
         <td>
           <input type="time"
                  className={`${this.state.nonTimeValues && this.state.nonTimeValues.endTime ? 'invalid' : 'valid'}`}
                  value={values.endTime}
-                 onChange={(e) => this.handleTimeChange('endTime', this.props.index, e.target.value)}
+                 onChange={(e) => this.handleEndTimeChange(this.props.index, e.target.value)}
                  onBlur={this.clearNonTimeValue}/>
         </td>
       </tr>

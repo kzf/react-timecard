@@ -3,10 +3,19 @@ var Timesheet = React.createClass({
   START_TIME: new Time(7, 0),
   END_TIME: new Time(7, 0, 'pm'),
   
+  TIME_BREAKS: [[new Time(9,0), new Time(12,30,'pm')], [new Time(1,30,'pm'), new Time(5,30,'pm')]],
+  
   converter: new TimesheetConverter(),
   colorGenerator: new ColorGenerator(),
   
   getInitialState: function() {
+    console.log('aa', this.converter.calculatePartitionsForTimes([
+      {value: 'A', startTime: new Time('7:00'), endTime: new Time('7:10')}, 
+      {value: 'B', startTime: new Time('7:10'), endTime: new Time('7:30')},
+      {value: 'C', startTime: new Time('8:00'), endTime: new Time('8:30')}],
+      [[new Time(7,0), new Time(7,30)], [new Time(8,30), new Time(9,0)]]
+    ));
+    
     this.colorGenerator.addColor(undefined, '#eee')
     return {
       workHours: [
@@ -35,7 +44,7 @@ var Timesheet = React.createClass({
   },
   
   handleTimesChange: function(newTimes) {
-    this.setState({partitions: this.converter.calculatePartitionsForTimes(newTimes)});
+    this.setState({partitions: this.converter.calculatePartitionsForTimes(newTimes, this.TIME_BREAKS)});
   },
   
   validateWorkHours: function(workHours) {
@@ -46,7 +55,7 @@ var Timesheet = React.createClass({
     var list = this.state.partitions.map((p, i) => (
       <li key={i}>Partition {p.name}: size {p.size}</li>
     ));
-    var times = this.converter.calculateTimesForPartitions(this.state.partitions, [[new Time(9,0), new Time(12,30,'pm')], [new Time(1,30,'pm'), new Time(5,30,'pm')]]);
+    var times = this.converter.calculateTimesForPartitions(this.state.partitions, this.TIME_BREAKS);
     var timesUL = times.map((t, i) => (
       <li key={i}>{t.startTime.toString()} - {t.endTime.toString()}</li>
     ));
@@ -63,7 +72,7 @@ var Timesheet = React.createClass({
         <PartitionSelector partitions={this.state.partitions}
                            handlePartitionChange={this.handlePartitionChange}
                            colorGenerator={this.colorGenerator}
-                           labels={[['10:00AM', 10], ['14:00AM', 30]]}
+                           labels={[['10:00AM', 60], ['14:00AM', 180]]}
                            minorMarkers={60}
                            majorMarkers={120} />
         <ul>
