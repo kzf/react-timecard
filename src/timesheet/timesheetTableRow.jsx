@@ -38,6 +38,7 @@ var TimesheetTableRow = React.createClass({
         </td>
         <td>
           <input type="time"
+                 readOnly={this.props.readOnly}
                  className={`${this.state.nonTimeValues && this.state.nonTimeValues.endTime ? 'invalid' : 'valid'}`}
                  value={values.endTime}
                  onChange={(e) => this.handleEndTimeChange(this.props.index, e.target.value)}

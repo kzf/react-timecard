@@ -82,6 +82,7 @@ var Timesheet = React.createClass({
           {timesUL}
         </ul>
         <TimesheetTable times={times}
+                        timeBreaks={this.TIME_BREAKS}
                         handleTimesChange={this.handleTimesChange} />
       </div>
     );

@@ -124,3 +124,7 @@ body, html {
 input[type="time"][readonly] {
   background-color: #eee;
 }
+
+tr.time-break {
+  background-color: red;
+}

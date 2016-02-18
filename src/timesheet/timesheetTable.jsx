@@ -16,18 +16,28 @@ var TimesheetTable = React.createClass({
   },
   
   render: function() {
+    var currentTimeBreakIndex = 0,
+        timeRows = [];
+    this.props.times.map(function (t, i) {
+      var finalRow = this.props.timeBreaks[currentTimeBreakIndex][1].lessThanEq(t.endTime);
+      timeRows.push(<TimesheetTableRow
+                         key={i}
+                         readOnly={finalRow}
+                         index={i}
+                         name={t.value}
+                         startTime={t.startTime}
+                         endTime={t.endTime}
+                         handleEndTimeChange={(attr, i, value) => this.handleEndTimeChange(attr, i, value)} />);
+      if (finalRow) {
+        timeRows.push(<tr className="time-break"><td colSpan="3"></td></tr>);
+        currentTimeBreakIndex++;
+      }
+    }.bind(this));             
     return (
       <div>
         <table className="timesheet-table">
           <tbody>
-            {this.props.times.map((t, i) => (
-              <TimesheetTableRow key={i}
-                                 index={i}
-                                 name={t.value}
-                                 startTime={t.startTime}
-                                 endTime={t.endTime}
-                                 handleEndTimeChange={(attr, i, value) => this.handleEndTimeChange(attr, i, value)} />
-            ))}
+            {timeRows}
           </tbody>
         </table>
       </div>
