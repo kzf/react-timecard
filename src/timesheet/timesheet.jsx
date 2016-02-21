@@ -76,9 +76,10 @@ var Timesheet = React.createClass({
   
   render: function() {
     var list = this.state.partitions.map((p, i) => (
-      <li key={i}>Partition {p.name}: size {p.size}</li>
-    ));
-    var times = this.converter.calculateTimesForPartitions(this.state.partitions, this.timeBreaks());
+                 <li key={i}>Partition {p.name}: size {p.size}</li>
+               )),
+        timeBreaks = this.timeBreaks();
+    var times = this.converter.calculateTimesForPartitions(this.state.partitions, timeBreaks);
     var timesUL = times.map((t, i) => (
       <li key={i}>{t.startTime.toString()} - {t.endTime.toString()}</li>
     ));
@@ -95,7 +96,7 @@ var Timesheet = React.createClass({
                          <PartitionSelector partitions={this.applyTooltips(this.state.partitions)}
                            handlePartitionChange={this.handlePartitionChange}
                            colorGenerator={this.colorGenerator}
-                           labels={this.converter.calculateLabelsForTimeBreaks(this.timeBreaks())}
+                           labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
                            minorMarkers={15}
                            majorMarkers={60} />
         <ul>
@@ -105,7 +106,7 @@ var Timesheet = React.createClass({
           {timesUL}
         </ul>
         <TimesheetTable times={times}
-                        timeBreaks={this.timeBreaks()}
+                        timeBreaks={timeBreaks}
                         handleTimesChange={this.handleTimesChange} />
       </div>
     );

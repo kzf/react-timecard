@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "dependencies": {},
   "devDependencies": {
+    "babel-core": "^6.11.4",
     "babel-preset-react": "^6.11.1",
+    "babel-register": "^6.11.6",
     "browser-sync": "^2.9.6",
     "gulp": "^3.9.0",
     "gulp-autoprefixer": "^3.0.2",
@@ -11,17 +13,20 @@
     "gulp-concat": "^2.6.0",
     "gulp-eslint": "^3.0.1",
     "gulp-filter": "^4.0.0",
+    "gulp-mocha": "^3.0.0",
     "gulp-newer": "^1.2.0",
     "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.5.2",
     "gulp-util": "^3.0.7",
+    "mocha": "^3.0.0",
     "randomcolor": "^0.4.4",
     "react": "^15.2.1",
     "react-dom": "^15.2.1"
   },
   "scripts": {
-    "gulp": "gulp"
+    "gulp": "gulp",
+    "mocha": "mocha --compilers js:babel-register --use_strict"
   }
 }

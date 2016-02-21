@@ -1,3 +1,5 @@
+'use strict';
+
 var gulp         = require('gulp');
 var autoprefixer = require('gulp-autoprefixer');
 var babel        = require('gulp-babel');
@@ -12,6 +14,7 @@ var reload       = browserSync.reload;
 var sass         = require('gulp-sass');
 var sourcemaps   = require('gulp-sourcemaps');
 var gutil        = require('gulp-util');
+var mocha        = require('gulp-mocha');
 
 var onError = function(err) {
   notify.onError({
@@ -33,6 +36,11 @@ var jsFiles = {
     'node_modules/randomcolor/randomColor.js',
     'src/*/*.jsx',
     'src/main.jsx',
+  ],
+  test: [
+    'src/test.jsx',
+    'node_modules/randomcolor/randomColor.js',
+    'src/*/*.jsx',
   ]
 };
 
@@ -72,6 +80,34 @@ gulp.task('concat', ['copy-react', 'copy-react-dom'], function() {
     .pipe(concat('app.js'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'));
+});
+
+gulp.task('concat-test', function() {
+  return gulp.src(jsFiles.vendor.concat(jsFiles.test))
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+      presets: ["react"],
+    }))
+    .on('error', function swallowError (error) {
+        this.emit('end')
+      })
+    .pipe(concat('app.js'))
+    .pipe(gulp.dest('dist/test'));
+});
+
+// Run mocha tests
+gulp.task('mocha', ['concat-test'], function() {
+  return gulp.src(['test/*.js'], { read: false })
+    .pipe(mocha({
+      reporter: 'list',
+      compilers: {
+        js: 'babel-register'
+      },
+      use_strict: true,
+      useStrict: true,
+      'use-strict': true
+    }))
+    .on('error', gutil.log);
 });
 
 // Compile Sass to CSS

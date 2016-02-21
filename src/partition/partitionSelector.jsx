@@ -2,7 +2,7 @@ var PartitionSelector = React.createClass({
   getInitialState: function() {
     return {
       // Minimum size of a partition in pixels
-      minPartitionPixels: 20,
+      minPartitionPixels: 8,
       // The {key} of the handle that we are currently dragging
       draggingHandle: false,
       colorGenerator: this.props.colorGenerator || new ColorGenerator(),
