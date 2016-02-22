@@ -124,15 +124,16 @@ gulp.task('sass', function() {
 
   var sassOptions = {
     includePaths: [
-
+      
     ]
   };
 
-  return gulp.src('src/**/*.scss')
+  return gulp.src(['vendor/bootstrap.min.css', 'src/**/*.scss'])
     .pipe(plumber(plumberOptions))
     .pipe(sourcemaps.init())
     .pipe(sass(sassOptions))
     .pipe(autoprefixer(autoprefixerOptions))
+    .pipe(concat('main.css'))
     .pipe(sourcemaps.write('./'))
     .pipe(gulp.dest('dist'))
     .pipe(filter(filterOptions))
