@@ -10,6 +10,20 @@ class TimesheetConverter {
     return labels;
   }
   
+  calculateLabelsForTimeBreaks(timeBreaks) {
+    var labels = [],
+        minutesSoFar = 0;
+    timeBreaks.forEach(function(timeBreak) {
+      console.log(timeBreak);
+      labels = labels.concat(this.calculateLabelsFor(timeBreak[0], timeBreak[1]).map((label) => (
+        [label[0], label[1] + minutesSoFar]
+      )));
+      minutesSoFar += timeBreak[1].minutesAfter(timeBreak[0]);
+    }.bind(this));
+    console.log(labels, 'labels');
+    return labels;
+  }
+  
   splitPartitionsFromTimeBreaks(partitions, timeBreaks) {
     // Split any partitions that overlap the boundaries between timeBreaks
     // into a portion before the gap and a portion after

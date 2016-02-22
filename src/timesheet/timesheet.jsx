@@ -95,9 +95,9 @@ var Timesheet = React.createClass({
                          <PartitionSelector partitions={this.applyTooltips(this.state.partitions)}
                            handlePartitionChange={this.handlePartitionChange}
                            colorGenerator={this.colorGenerator}
-                           labels={[['10:00AM', 60], ['14:00AM', 180]]}
-                           minorMarkers={60}
-                           majorMarkers={120} />
+                           labels={this.converter.calculateLabelsForTimeBreaks(this.timeBreaks())}
+                           minorMarkers={15}
+                           majorMarkers={60} />
         <ul>
           {list}
         </ul>
