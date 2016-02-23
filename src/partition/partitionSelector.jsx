@@ -156,7 +156,7 @@ var PartitionSelector = React.createClass({
           backgroundColor: this.state.colorGenerator.getColor(partition.value),
         },
         resizing = partition.resizing ? 'resizing' : ''
-        cellClasses = `cell ${resizing}`,
+        cellClasses = `progress-bar cell ${resizing}`,
         dragging = this.state.draggingHandle === key ? 'dragging' : '',
         handleClasses = `handle ${dragging}`,
         handle = (key === this.props.partitions.length - 1) ? '' : (
@@ -198,11 +198,13 @@ var PartitionSelector = React.createClass({
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
     return (
-      <div className={`partition-selector ${this.state.valid ? 'valid' : 'invalid'}`}>
-        {partitions}
-        {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
-        {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
-        {this.renderLabels(this.props.labels, totalSize)}
+      <div className={`partition-selector ${this.props.customClass || ''}`}>
+        <div className={`progress ${this.state.valid ? 'valid' : 'invalid'}`}>
+          {partitions}
+          {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
+          {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
+          {this.renderLabels(this.props.labels, totalSize)}
+        </div>
       </div>
     );
   }

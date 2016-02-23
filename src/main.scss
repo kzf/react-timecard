@@ -1,24 +1,32 @@
 $partitionSelectorHeight: 50px;
+$workHoursPartitionHeight: 28px;
+$workHoursMarginHeight: 8px;
+$workHoursMarginMajorHeight: 14px;
 
 body, html {
   font-family: Arial, sans-serif;
 }
 
+body {
+  padding-top: 70px;
+}
+
 .partition-selector {
   position: relative;
   width: 100%;
-  height: $partitionSelectorHeight + 2;
-  border: 1px solid black;
+  
+  // border: 1px solid black;
   box-sizing: border-box;
-  margin-bottom: 18px;
-  &.invalid {
-    border-color: red;
-    box-shadow: 0 0 5px red;
+  // margin-bottom: 18px;
+  & .progress {
+    height: $partitionSelectorHeight;
+    &.invalid {
+      box-shadow: 0 0 4px 2px rgb(213, 19, 0);
+    }
   }
   & .cell {
-    float: left;
-    height: $partitionSelectorHeight;
-    background-color: lightpink;
+    transition: none;
+    // background-color: lightpink;
     position: relative;
     user-select: none;
     &.resizing {
@@ -30,7 +38,7 @@ body, html {
       top: 0;
       height: $partitionSelectorHeight;
       width: 1px;
-      background-color: black;
+      background-color: rgba(0, 0, 0, 0.4);
       cursor: ew-resize;
       z-index: 999;
       &::after {
@@ -57,36 +65,37 @@ body, html {
         border-bottom-color: black;
       }
       &.dragging {
-        background-color: purple;
+        background-color: rgb(0, 0, 0);
       }
     }
     & .cell-tooltip {
       position: absolute;
       left: 50%;
-      top: 100%;
-      transform: translateX(-50%);
+      top: 50%;
+      transform: translateX(-50%) translateY(-50%);
       text-align: center;
-      background-color: rgba(0, 0, 0, 0.8);
+      background-color: rgba(0, 0, 0, 0.4);
       color: #fff;
       font-size: 0.8em;
-      padding: 4px 8px;
+      padding: 2px 4px;
+      line-height: 1.1em;
       margin-top: 6px;
       border-radius: 6px;
       display: none;
       z-index: 999;
-      &::after {
-        content: "";
-        width: 0;
-        height: 0;
-        border: 0 solid transparent;
-        border-bottom-width: 5px;
-        border-left-width: 5px;
-        border-right-width: 5px;
-        border-bottom-color: rgba(0, 0, 0, 0.8);
-        position: absolute;
-        top: -5px;
-        left: calc(50% - 5px);
-      }
+      // &::after {
+      //   content: "";
+      //   width: 0;
+      //   height: 0;
+      //   border: 0 solid transparent;
+      //   border-bottom-width: 5px;
+      //   border-left-width: 5px;
+      //   border-right-width: 5px;
+      //   border-bottom-color: rgba(0, 0, 0, 0.4);
+      //   position: absolute;
+      //   top: -5px;
+      //   left: calc(50% - 5px);
+      // }
     }
     &:hover .cell-tooltip {
       display: block;
@@ -97,7 +106,7 @@ body, html {
     bottom: 0;
     height: 20px;
     width: 1px;
-    background-color: black;
+    background-color: rgb(94, 93, 93);
     pointer-events: none;
     &.marker-major {
       width: 2px;
@@ -108,9 +117,26 @@ body, html {
     position: absolute;
     top: calc(100% + 5px);
     font-size: 60%;
-    color: black;
+    color: rgb(94, 93, 93);
     transform: translateX(-50%);
     user-select: none;
+  }
+}
+
+.work-hours-select {
+  & .progress {
+    height: $workHoursPartitionHeight;
+  }
+  & .marker {
+    height: $workHoursMarginHeight;
+    &.marker-major {
+      height: $workHoursMarginMajorHeight;
+    }
+  }
+  & .cell {
+    & .handle {
+      height: $workHoursPartitionHeight;
+    }
   }
 }
 
@@ -121,10 +147,14 @@ body, html {
   }
 }
 
+.dock-types {
+  border-bottom-width: 0;
+}
+
 input[type="time"][readonly] {
   background-color: #eee;
 }
 
 tr.time-break {
-  background-color: red;
+  
 }

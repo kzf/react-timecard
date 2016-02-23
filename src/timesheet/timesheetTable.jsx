@@ -29,17 +29,29 @@ var TimesheetTable = React.createClass({
                          endTime={t.endTime}
                          handleEndTimeChange={(attr, i, value) => this.handleEndTimeChange(attr, i, value)} />);
       if (finalRow) {
-        timeRows.push(<tr key={2*i + 1} className="time-break"><td colSpan="3"></td></tr>);
+        timeRows.push(
+          <tr key={2*i + 1}
+              className="time-break active">
+            <td colSpan="3"></td>
+          </tr>
+        );
         currentTimeBreakIndex++;
       }
     }.bind(this));             
     return (
       <div>
-        <table className="timesheet-table">
-          <tbody>
-            {timeRows}
-          </tbody>
-        </table>
+        <div className="panel panel-default">
+          <div className="panel-heading">
+            <a data-toggle="collapse" href="#">Timesheet Table</a>
+          </div>
+          <div className="panel-collapse collapse in">
+            <table className="table timesheet-table">
+              <tbody>
+                {timeRows}
+              </tbody>
+            </table>
+          </div>
+        </div>
       </div>
     );
   }

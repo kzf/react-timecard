@@ -32,14 +32,14 @@ var TimesheetTableRow = React.createClass({
         <td>{this.props.name}</td>
         <td>
           <input type="time"
-                 className="valid"
+                 className="form-control valid"
                  value={this.props.startTime.toString24()}
                  readOnly="readonly" />
         </td>
         <td>
           <input type="time"
                  readOnly={this.props.readOnly}
-                 className={`${this.state.nonTimeValues && this.state.nonTimeValues.endTime ? 'invalid' : 'valid'}`}
+                 className={`form-control ${this.state.nonTimeValues && this.state.nonTimeValues.endTime ? 'invalid' : 'valid'}`}
                  value={values.endTime}
                  onChange={(e) => this.handleEndTimeChange(this.props.index, e.target.value)}
                  onBlur={this.clearNonTimeValue}/>

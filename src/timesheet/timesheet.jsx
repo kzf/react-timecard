@@ -84,30 +84,58 @@ var Timesheet = React.createClass({
       <li key={i}>{t.startTime.toString()} - {t.endTime.toString()}</li>
     ));
     return (
-      <div>
-        <PartitionSelector partitions={this.applyTooltips(this.state.workHours)}
-                           handlePartitionChange={this.handleWorkHoursChange}
-                           validatePartitions={this.validateWorkHours}
-                           labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
-                           colorGenerator={this.colorGenerator}
-                           minorMarkers={15}
-                           majorMarkers={60} />
-        
-                         <PartitionSelector partitions={this.applyTooltips(this.state.partitions)}
-                           handlePartitionChange={this.handlePartitionChange}
-                           colorGenerator={this.colorGenerator}
-                           labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
-                           minorMarkers={15}
-                           majorMarkers={60} />
-        <ul>
-          {list}
-        </ul>
-        <ul>
-          {timesUL}
-        </ul>
-        <TimesheetTable times={times}
-                        timeBreaks={timeBreaks}
-                        handleTimesChange={this.handleTimesChange} />
+      <div className="row">
+        <div className="col-sm-7">
+          <PartitionSelector partitions={this.applyTooltips(this.state.workHours)}
+                             customClass={'work-hours-select'}
+                             handlePartitionChange={this.handleWorkHoursChange}
+                             validatePartitions={this.validateWorkHours}
+                             labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
+                             colorGenerator={this.colorGenerator}
+                             minorMarkers={15}
+                             majorMarkers={60} />
+          
+          <PartitionSelector partitions={this.applyTooltips(this.state.partitions)}
+                             handlePartitionChange={this.handlePartitionChange}
+                             colorGenerator={this.colorGenerator}
+                             labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
+                             minorMarkers={15}
+                             majorMarkers={60} />
+                           
+          <TimesheetTable times={times}
+                          timeBreaks={timeBreaks}
+                          handleTimesChange={this.handleTimesChange} />
+        </div>
+        <div className="col-sm-5">
+          <ul className="nav nav-tabs dock-types">
+            <li role="presentation" className="active"><a href="#">Home</a></li>
+            <li role="presentation"><a href="#">Profile</a></li>
+            <li role="presentation"><a href="#">Messages</a></li>
+          </ul>
+          <div className="list-group">
+            <div href="#" className="list-group-item">
+              <span className="badge">7:30 PM</span>
+              <h4 className="list-group-item-heading">List group item heading</h4>
+              <p className="list-group-item-text">
+                Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
+              </p>
+            </div>
+            <div href="#" className="list-group-item">
+              <span className="badge">7:30 PM</span>
+              <h4 className="list-group-item-heading">List group item heading</h4>
+              <p className="list-group-item-text">
+                Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
+              </p>
+            </div>
+            <div href="#" className="list-group-item">
+              <span className="badge">7:30 PM</span>
+              <h4 className="list-group-item-heading">List group item heading</h4>
+              <p className="list-group-item-text">
+                Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     );
   }
