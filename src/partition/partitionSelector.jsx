@@ -201,10 +201,10 @@ var PartitionSelector = React.createClass({
       <div className={`partition-selector ${this.props.customClass || ''}`}>
         <div className={`progress ${this.state.valid ? 'valid' : 'invalid'}`}>
           {partitions}
-          {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
-          {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
-          {this.renderLabels(this.props.labels, totalSize)}
         </div>
+        {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
+        {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
+        {this.renderLabels(this.props.labels, totalSize)}
       </div>
     );
   }
