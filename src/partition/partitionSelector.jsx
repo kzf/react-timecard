@@ -111,6 +111,20 @@ var PartitionSelector = React.createClass({
     }
   },
   
+  handleDrop: function(key, event) {
+    // Split the partition at {key} into two partitions by adding a new
+    // partition to the left and resizing the original and new partition
+    // so that the 
+    var partition = this.props.partitions[key],
+        value = event.dataTransfer.getData('value'),
+        tooltip = event.dataTransfer.getData('tooltip');
+    var partitions = this.props.partitions.concat([]);
+    partitions.splice(key, 1, {value: value, tooltip: tooltip, size: partition.size});
+    this.setPartitions(partitions);
+  },
+  
+  // MOUNTING & UNMOUNTING
+  
   componentDidMount: function() {
     // Register event handlers on the document for mouseup and mousemove since
     // we want these to fire even the the user is not over our component
@@ -123,6 +137,8 @@ var PartitionSelector = React.createClass({
     document.removeEventListener('mouseup', this.stopDragHandle);
     document.removeEventListener('mousemove', this.moveDragHandle);
   },
+  
+  // RENDERING
   
   renderMarkers: function(markers, className, totalSize) {
     if (!markers) return;
@@ -164,21 +180,30 @@ var PartitionSelector = React.createClass({
                onMouseDown={(e) => this.startDragHandle(key, e)}>
           </div>
         );
+    // TODO: Do we need this after changing to JS tooltips?
+    // TODO: Or reconsider how we are doing CSS tooltips
     // We hide tooltips while dragging. Cells without a tooltip get no tooltip
     // instead of an empty one.
     if ((this.state.draggingHandle === false) && partition.tooltip) {
       tooltip = <div className="cell-tooltip">{partition.tooltip}</div>;
     }
     return (
-      <div ref={(ref) => this.saveCellRef(key, ref)}
-           key={key}
+      <div key={key}
+           ref={(ref) => this.saveCellRef(key, ref)}
            className={cellClasses}
            size={width}
            style={style}
            onClick={(e) => this.handleCellClick(key, e)}
-           onDoubleClick={(e) => this.splitPartition(key, e)}>
+           onDoubleClick={(e) => this.splitPartition(key, e)}
+           onDragOver={(e) => e.preventDefault()}
+           onDrop={(e) => this.handleDrop(key, e)}>
         {handle}
         {tooltip}
+        <PartitionDraggableValue values={{
+                                   value: partition.value,
+                                   tooltip: partition.tooltip,
+                                 }}>
+        </PartitionDraggableValue>
       </div>
     );
   },

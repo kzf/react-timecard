@@ -133,6 +133,8 @@ var Timesheet = React.createClass({
               <p className="list-group-item-text">
                 Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
               </p>
+              <PartitionDraggableValue values="">
+              </PartitionDraggableValue>
             </div>
           </div>
         </div>
