@@ -8,7 +8,7 @@ var PartitionDraggableValue = React.createClass({
         key;
     for (key in values) {
       if (values.hasOwnProperty(key)) {
-        e.dataTransfer.setData(key, values[key]);
+        if (values[key]) e.dataTransfer.setData(key, values[key]);
       }
     }
   },

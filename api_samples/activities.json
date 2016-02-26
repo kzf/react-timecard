@@ -1,0 +1,15 @@
+{
+  "categories": [
+    {
+      "label": "First",
+      "activities": [
+        {
+          "badge": "7:00 PM",
+          "heading": "Activity 1",
+          "description": "Something",
+          "value": "T11027"
+        }
+      ]
+    }
+  ]
+}

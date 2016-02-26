@@ -74,6 +74,21 @@ var Timesheet = React.createClass({
     return workHours.filter((p) => p.value).reduce((a,b) => a + b.size, 0) >= this.MIN_WORK_MINUTES;
   },
   
+  getActiveActivities: function() {
+    var activeActivities = {},
+        activeActivitiesArray = [],
+        key;
+    this.state.partitions.forEach(function(partition) {
+      activeActivities[partition.value] = partition;
+    });
+    for (key in activeActivities) {
+      if (activeActivities.hasOwnProperty(key)) {
+        activeActivitiesArray.push(activeActivities[key]);
+      }
+    }
+    return this.applyTooltips(activeActivitiesArray);
+  },
+  
   render: function() {
     var list = this.state.partitions.map((p, i) => (
                  <li key={i}>Partition {p.name}: size {p.size}</li>
@@ -107,36 +122,17 @@ var Timesheet = React.createClass({
                           handleTimesChange={this.handleTimesChange} />
         </div>
         <div className="col-sm-5">
-          <ul className="nav nav-tabs dock-types">
-            <li role="presentation" className="active"><a href="#">Home</a></li>
-            <li role="presentation"><a href="#">Profile</a></li>
-            <li role="presentation"><a href="#">Messages</a></li>
-          </ul>
-          <div className="list-group">
-            <div href="#" className="list-group-item">
-              <span className="badge">7:30 PM</span>
-              <h4 className="list-group-item-heading">List group item heading</h4>
-              <p className="list-group-item-text">
-                Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-              </p>
-            </div>
-            <div href="#" className="list-group-item">
-              <span className="badge">7:30 PM</span>
-              <h4 className="list-group-item-heading">List group item heading</h4>
-              <p className="list-group-item-text">
-                Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-              </p>
-            </div>
-            <div href="#" className="list-group-item">
-              <span className="badge">7:30 PM</span>
-              <h4 className="list-group-item-heading">List group item heading</h4>
-              <p className="list-group-item-text">
-                Donec id elit non mi porta gravida at eget metus. Maecenas sed diam eget risus varius blandit.
-              </p>
-              <PartitionDraggableValue values="">
-              </PartitionDraggableValue>
-            </div>
-          </div>
+          <Dock activeActivities={this.getActiveActivities()}
+                panels={[
+                  {
+                    title: 'Morris',
+                    activities: [],
+                  },
+                  {
+                    title: 'Henry',
+                    activities: [],
+                  }
+                ]}/>
         </div>
       </div>
     );
