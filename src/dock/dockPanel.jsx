@@ -16,14 +16,22 @@ var DockPanel = React.createClass({
   render: function() {
     if (this.props.loaded) {
       return (
-        <div className="list-group">
-          {this.props.activities.map((activity, i) => (
-            <div key={i} data-abc={console.log(activity, i)} href="#" className="list-group-item">
-              {activity.badge ? <span className="badge">7:30 PM</span> : ''}
-              <h4 className="list-group-item-heading">{activity.value}</h4>
-              <p className="list-group-item-text">
-                {activity.tooltip}
-              </p>
+        <div className="list-group dock-panel">
+          {this.props.activities.map((group, i) => (
+            <div>
+              <div key={i} href="#" className="list-group-item disabled">
+                {group.label}
+              </div>
+              {group.activities.map((activity, j) => (
+                <div key={j} href="#" className="list-group-item dock-panel-item">
+                  <div className="dock-panel-color"></div>
+                  <p className="list-group-item-text">
+                    <span className="label label-primary">{activity.value}</span>
+                    {activity.badge ? <span className="label label-default">{activity.badge}</span> : ''}
+                    {activity.tooltip}
+                  </p>
+                </div>
+              ))}
             </div>
           ))}
         </div>
@@ -31,15 +39,9 @@ var DockPanel = React.createClass({
     } else {
       return (
         <div className="list-group">
-          {this.props.activities.map((activity, i) => (
-            <div key={i} data-abc={console.log(activity, i)} href="#" className="list-group-item">
-              {activity.badge ? <span className="badge">7:30 PM</span> : ''}
-              <h4 className="list-group-item-heading">{activity.value}</h4>
-              <p className="list-group-item-text">
-                {activity.tooltip}
-              </p>
-            </div>
-          ))}
+          <div className="list-group-item">
+            Loading...
+          </div>
         </div>
       )
     }

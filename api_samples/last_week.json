@@ -1,0 +1,284 @@
+[
+  {
+    "date":"2016-08-01T00:00:00.000+10:00",
+    "work_logs":[
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822029,
+        "project_code":"KZF0933",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822041,
+        "project_code":"KZF0016",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10810862,
+        "project_code":"KZF0006",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822029,
+        "project_code":"KZF0933",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822029,
+        "project_code":"KZF0933",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822184,
+        "project_code":"KZF1524",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10819957,
+        "project_code":"KZF1123",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822029,
+        "project_code":"KZF0933",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      }
+    ]
+  },
+  {
+    "date":"2016-08-02T00:00:00.000+10:00",
+    "work_logs":[
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822029,
+        "project_code":"KZF0933",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      }
+    ]
+  },
+  {
+    "date":"2016-08-03T00:00:00.000+10:00",
+    "work_logs":[
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822183,
+        "project_code":"KZF1374",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822183,
+        "project_code":"KZF1374",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822217,
+        "project_code":"KZF1433",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822209,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822196,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822195,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      }
+    ]
+  },
+  {
+    "date":"2016-08-04T00:00:00.000+10:00",
+    "work_logs":[
+      {
+        "ticked_id":10822215,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822198,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822197,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822162,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822147,
+        "project_code":"KZF0994",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822149,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822162,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822217,
+        "project_code":"KZF1433",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822215,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822195,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822197,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822198,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822162,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822209,
+        "project_code":"KZF1434",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822238,
+        "project_code":"KZF0001",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822238,
+        "project_code":"KZF0001",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10821766,
+        "project_code":"KZF0993",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822237,
+        "project_code":"KZF0011",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10821766,
+        "project_code":"KZF0993",
+        "title":"Activity Title"
+      }
+    ]
+  },
+  {
+    "date":"2016-08-05T00:00:00.000+10:00",
+    "work_logs":[
+      {
+        "ticked_id":10821766,
+        "project_code":"KZF0993",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822246,
+        "project_code":"KZF0020",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822246,
+        "project_code":"KZF0020",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822253,
+        "project_code":"KZF0020",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822246,
+        "project_code":"KZF0020",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822098,
+        "project_code":"KZF1453",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10821767,
+        "project_code":"KZF0993",
+        "title":"Activity Title"
+      },
+      {
+        "ticked_id":10822253,
+        "project_code":"KZF0020",
+        "title":"Activity Title"
+      }
+    ]
+  },
+  {
+    "date":"2016-08-06T00:00:00.000+10:00",
+    "work_logs":[
+
+    ]
+  },
+  {
+    "date":"2016-08-07T00:00:00.000+10:00",
+    "work_logs":[
+
+    ]
+  }
+]

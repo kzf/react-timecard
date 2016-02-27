@@ -12,12 +12,31 @@ var Dock = React.createClass({
     };
   },
   
+  loadPanel: function(panel, i) {
+    if (!panel.loaded && !panel.loading) {
+      panel.source(function(categories) {
+        console.log('loaded panel', i, 'with', categories)
+        var newPanels = this.state.panels.concat([]);
+        newPanels.splice(i, 1, {
+          title: newPanels[i].title,
+          active: newPanels[i].active,
+          activities: categories,
+          loaded: true,
+        });
+        this.setState({panels: newPanels});
+      }.bind(this));
+    }
+    return true;
+  },
+  
   setActivePanel: function(key) {
     this.setState({panels: this.state.panels.map((panel, i) => (
       {
         title: panel.title,
-        active: i == key,
+        active: i === key,
         activities: panel.activities,
+        source: panel.source,
+        loading: panel.loading || ((i === key) && !panel.loaded && this.loadPanel(panel, i)),
         loaded: panel.loaded,
       }
     ))});

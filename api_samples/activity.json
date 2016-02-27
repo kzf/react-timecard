@@ -1,0 +1,535 @@
+{
+  "actions":{
+    "days":[
+      {
+        "wday":1,
+        "date":"2016-08-08T00:00:00.000+10:00",
+        "actions":[
+          {
+            "time":"02:17 PM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35499,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"02:32 PM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:41 PM",
+            "ticket":{
+              "id":22237,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"project_code",
+              "from":"",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"03:41 PM",
+            "ticket":{
+              "id":22008,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"03:47 PM",
+            "ticket":{
+              "id":22008,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"05:01 PM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35504,
+              "message":"Sample message"
+            }
+          }
+        ]
+      },
+      {
+        "wday":2,
+        "date":"2016-08-09T00:00:00.000+10:00",
+        "actions":[
+          {
+            "time":"09:33 AM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35506,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"10:10 AM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35508,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"10:38 AM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"10:42 AM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"10:43 AM",
+            "ticket":{
+              "id":21767,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"10:57 AM",
+            "ticket":{
+              "id":22147,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"11:19 AM",
+            "ticket":{
+              "id":22255,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"11:19 AM",
+            "ticket":{
+              "id":22255,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"11:32 AM",
+            "ticket":{
+              "id":22257,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"11:33 AM",
+            "ticket":{
+              "id":22257,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:58 PM",
+            "ticket":{
+              "id":21810,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35516,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"03:44 PM",
+            "ticket":{
+              "id":20703,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35518,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"03:45 PM",
+            "ticket":{
+              "id":20703,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35519,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"03:47 PM",
+            "ticket":{
+              "id":21810,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"04:01 PM",
+            "ticket":{
+              "id":21589,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"04:14 PM",
+            "ticket":{
+              "id":21840,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"status",
+              "from":"open",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"04:15 PM",
+            "ticket":{
+              "id":19178,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"04:16 PM",
+            "ticket":{
+              "id":17636,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"status",
+              "from":"open",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"04:16 PM",
+            "ticket":{
+              "id":20078,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"status",
+              "from":"open",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"04:17 PM",
+            "ticket":{
+              "id":18450,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"status",
+              "from":"open",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"05:09 PM",
+            "ticket":{
+              "id":21812,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          }
+        ]
+      },
+      {
+        "wday":3,
+        "date":"2016-08-10T00:00:00.000+10:00",
+        "actions":[
+          {
+            "time":"09:53 AM",
+            "ticket":{
+              "id":21124,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"12:04 PM",
+            "ticket":{
+              "id":21622,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"12:27 PM",
+            "ticket":{
+              "id":22309,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35529,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"12:28 PM",
+            "ticket":{
+              "id":22309,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "checkin_id":35530,
+              "message":"Sample message"
+            }
+          },
+          {
+            "time":"12:33 PM",
+            "ticket":{
+              "id":22309,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"01:46 PM",
+            "ticket":{
+              "id":22309,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:14 PM",
+            "ticket":{
+              "id":22305,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:14 PM",
+            "ticket":{
+              "id":22306,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:15 PM",
+            "ticket":{
+              "id":22307,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:17 PM",
+            "ticket":{
+              "id":22308,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"comment",
+              "from":null,
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:17 PM",
+            "ticket":{
+              "id":22305,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:17 PM",
+            "ticket":{
+              "id":22306,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:17 PM",
+            "ticket":{
+              "id":22307,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          },
+          {
+            "time":"02:17 PM",
+            "ticket":{
+              "id":22308,
+              "title":"Sample activity title"
+            },
+            "action":{
+              "changed":"ticket_queue_id",
+              "from":"76",
+              "to":"Sample change to"
+            }
+          }
+        ]
+      },
+      {
+        "wday":4,
+        "date":"2016-08-11T00:00:00.000+10:00",
+        "actions":[
+
+        ]
+      },
+      {
+        "wday":5,
+        "date":"2016-08-12T00:00:00.000+10:00",
+        "actions":[
+
+        ]
+      },
+      {
+        "wday":6,
+        "date":"2016-08-13T00:00:00.000+10:00",
+        "actions":[
+
+        ]
+      },
+      {
+        "wday":0,
+        "date":"2016-08-14T00:00:00.000+10:00",
+        "actions":[
+
+        ]
+      }
+    ]
+  }
+}

@@ -86,7 +86,65 @@ var Timesheet = React.createClass({
         activeActivitiesArray.push(activeActivities[key]);
       }
     }
-    return this.applyTooltips(activeActivitiesArray);
+    return [
+      {
+        label: "Active Activities",
+        activities: this.applyTooltips(activeActivitiesArray)
+      }
+    ];
+  },
+  
+  loadCurrentActivity: function(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', '/api_samples/activity.json', true);
+    xhr.onreadystatechange = function() {
+      var data, categories;
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          data = JSON.parse(xhr.responseText);
+          categories = data.actions.days.map((day) => (
+            {
+              label: day.date,
+              activities: day.actions.map((action) => (
+                {
+                  value: '#' + action.ticket.id,
+                  tooltip: action.ticket.title,
+                  badge: action.time,
+                }
+              )),
+            }
+          ));
+          callback(categories);
+        }
+      }
+    };
+    xhr.send();
+  },
+  
+  loadLastWeeksTimesheet: function(callback) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', '/api_samples/last_week.json', true);
+    xhr.onreadystatechange = function() {
+      var data, categories;
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          data = JSON.parse(xhr.responseText);
+          categories = data.map((day) => (
+            {
+              label: day.date,
+              activities: day.work_logs.map((action) => (
+                {
+                  value: '#' + action.ticket_id,
+                  tooltip: action.title,
+                }
+              )),
+            }
+          ));
+          callback(categories);
+        }
+      }
+    };
+    xhr.send();
   },
   
   render: function() {
@@ -126,11 +184,11 @@ var Timesheet = React.createClass({
                 panels={[
                   {
                     title: 'Morris',
-                    activities: [],
+                    source: this.loadCurrentActivity,
                   },
                   {
                     title: 'Henry',
-                    activities: [],
+                    source: this.loadLastWeeksTimesheet,
                   }
                 ]}/>
         </div>

@@ -174,3 +174,22 @@ input[type="time"][readonly] {
 tr.time-break {
   
 }
+
+.dock-panel {
+  height: 80vh;
+  overflow-y: auto;
+  & .dock-panel-item {
+    position: relative;
+    & .label {
+      margin-right: 5px;
+    }
+    & .dock-panel-color {
+      background-color: red;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 10px;
+    }
+  }
+}
