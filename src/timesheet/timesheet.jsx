@@ -177,17 +177,19 @@ var Timesheet = React.createClass({
                            
           <TimesheetTable times={times}
                           timeBreaks={timeBreaks}
+                          colorGenerator={this.colorGenerator}
                           handleTimesChange={this.handleTimesChange} />
         </div>
         <div className="col-sm-5">
           <Dock activeActivities={this.getActiveActivities()}
+                colorGenerator={this.colorGenerator}
                 panels={[
                   {
-                    title: 'Morris',
+                    title: 'This Week',
                     source: this.loadCurrentActivity,
                   },
                   {
-                    title: 'Henry',
+                    title: 'Last Week',
                     source: this.loadLastWeeksTimesheet,
                   }
                 ]}/>

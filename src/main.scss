@@ -161,6 +161,17 @@ body {
     border-color: red;
     box-shadow: 0 0 5px red;
   }
+  & td {
+    position: relative;
+    & .table-row-color {
+      background-color: rgb(238, 238, 238);
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: 100%;
+    }
+  }
 }
 
 .dock-types {
@@ -184,12 +195,20 @@ tr.time-break {
       margin-right: 5px;
     }
     & .dock-panel-color {
-      background-color: red;
+      background-color: rgb(238, 238, 238);
       position: absolute;
       top: 0;
       left: 0;
       height: 100%;
       width: 10px;
+    }
+    & .partition-draggable-value {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      
     }
   }
 }

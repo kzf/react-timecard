@@ -6,7 +6,6 @@ var Dock = React.createClass({
           activities: this.props.activeActivities,
           loaded: true,
         };
-        console.log('pannels', this.props.panels);
     return {
       panels: [activePanel].concat(this.props.panels)
     };
@@ -15,7 +14,6 @@ var Dock = React.createClass({
   loadPanel: function(panel, i) {
     if (!panel.loaded && !panel.loading) {
       panel.source(function(categories) {
-        console.log('loaded panel', i, 'with', categories)
         var newPanels = this.state.panels.concat([]);
         newPanels.splice(i, 1, {
           title: newPanels[i].title,
@@ -55,7 +53,8 @@ var Dock = React.createClass({
             </li>
           ))}
         </ul>
-        <DockPanel name={activePanel.title}
+        <DockPanel colorGenerator={this.props.colorGenerator}
+                   name={activePanel.title}
                    loaded={activePanel.loaded}
                    activities={activePanel.activities}/>
       </div>

@@ -17,14 +17,19 @@ var TimesheetTable = React.createClass({
   
   render: function() {
     var currentTimeBreakIndex = 0,
-        timeRows = [];
+        timeRows = [],
+        previousStartTime;
     this.props.times.map(function (t, i) {
-      var finalRow = this.props.timeBreaks[currentTimeBreakIndex][1].lessThanEq(t.endTime);
+      var finalRow = this.props.timeBreaks[currentTimeBreakIndex][1].lessThanEq(t.endTime),
+          initialRow = t.startTime.lessThanEq(this.props.timeBreaks[currentTimeBreakIndex][0]);
       timeRows.push(<TimesheetTableRow
                          key={2*i}
-                         readOnly={finalRow}
+                         colorGenerator={this.props.colorGenerator}
+                         readOnlyStart={initialRow}
+                         readOnlyEnd={finalRow}
                          index={i}
                          name={t.value}
+                         previousStartTime={previousStartTime}
                          startTime={t.startTime}
                          endTime={t.endTime}
                          handleEndTimeChange={(attr, i, value) => this.handleEndTimeChange(attr, i, value)} />);
@@ -37,6 +42,7 @@ var TimesheetTable = React.createClass({
         );
         currentTimeBreakIndex++;
       }
+      previousStartTime = t.startTime;
     }.bind(this));             
     return (
       <div>
