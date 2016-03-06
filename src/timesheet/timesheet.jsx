@@ -14,6 +14,7 @@ var Timesheet = React.createClass({
   },
   
   getInitialState: function() {
+    var duration = this.MIN_WORK_MINUTES;
     this.colorGenerator.addColor(undefined, '#eee');
     return {
       workHours: [
@@ -24,18 +25,26 @@ var Timesheet = React.createClass({
         {size: 90},
       ],
       days: [
-        [
-          {value: 'A', size: 150},
-          {value: 'B', size: 100},
-          {value: 'C', size: 70},
-          {value: 'D', size: 130},
-        ],
-        [
-          {value: 'A', size: 150},
-          {value: 'B', size: 100},
-          {value: 'C', size: 70},
-          {value: 'D', size: 130},
-        ],
+        {
+          name: 'Monday',
+          partitions: [{size: duration}],
+        },
+        {
+          name: 'Tuesday',
+          partitions: [{size: duration}],
+        },
+        {
+          name: 'Wednesday',
+          partitions: [{size: duration}],
+        },
+        {
+          name: 'Thursday',
+          partitions: [{size: duration}],
+        },
+        {
+          name: 'Friday',
+          partitions: [{size: duration}],
+        },
       ],
     };
   },
@@ -53,20 +62,28 @@ var Timesheet = React.createClass({
   
   handleWorkHoursChange: function(key, newWorkHours) {
     // TODO: Update the partitions based on the new work hours
-    var partitions = this.state.days[key],
+    var partitions = this.state.days[key].partitions,
+        newDays = this.state.days.concat([]),
         newTotalSize = newWorkHours.filter((p) => p.value == 'working').reduce((a, b) => a + b.size, 0),
         oldTotalSize = partitions.reduce((a, b) => a + b.size, 0),
         multiplier = newTotalSize/oldTotalSize;
+    newDays.splice(key, 1, {
+      name: this.state.days[key].name,
+      partitions: partitions.map((p) => ({value: p.value, size: p.size * multiplier})),
+    })
     this.setState({
       workHours: newWorkHours,
-      partitions: partitions.map((p) => ({value: p.value, size: p.size * multiplier})),
+      days: newDays,
       // resize partitions to have the correct size
     });
   },
   
   handlePartitionChange: function(key, newPartitions) {
     var newDays = this.state.days.concat([]);
-    newDays.splice(key, 1, newPartitions);
+    newDays.splice(key, 1, {
+      name: this.state.days[key].name,
+      partitions: newPartitions
+    });
     this.setState({days: newDays});
   },
   
@@ -76,8 +93,14 @@ var Timesheet = React.createClass({
     ));
   },
   
-  handleTimesChange: function(newTimes) {
-    this.setState({partitions: this.converter.calculatePartitionsForTimes(newTimes, this.timeBreaks())});
+  handleTimesChange: function(key, newTimes) {
+    console.log('handle times change', key, newTimes);
+    var newDays = this.state.days.concat([]);
+    newDays.splice(key, 1, {
+      name: this.state.days[key].name,
+      partitions: this.converter.calculatePartitionsForTimes(newTimes, this.timeBreaks())
+    });
+    this.setState({days: newDays});
   },
   
   validateWorkHours: function(workHours) {
@@ -89,8 +112,8 @@ var Timesheet = React.createClass({
         activeActivitiesArray = [],
         key;
     this.state.days.forEach(function(day) {
-      day.forEach(function(cell) {
-        activeActivities[cell.value] = cell;
+      day.partitions.forEach(function(cell) {
+        if (cell.value) activeActivities[cell.value] = cell;
       });
     });
     for (key in activeActivities) {
@@ -159,12 +182,42 @@ var Timesheet = React.createClass({
     xhr.send();
   },
   
+  renderDayPartitions: function(timeBreaks) {
+    return (
+      this.state.days.map((day, i) => (
+        <div key={i}>
+          <h4>{day.name}</h4>
+          <PartitionSelector partitions={this.applyTooltips(day.partitions)}
+                             handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
+                             colorGenerator={this.colorGenerator}
+                             labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
+                             minorMarkers={15}
+                             majorMarkers={60} />
+        </div>
+      ))
+    );
+  },
+  
+  renderDayTables: function(timeBreaks) {
+    var times = this.state.days.map((day) => (
+      {
+        name: day.name,
+        array: this.converter.calculateTimesForPartitions(day.partitions, timeBreaks),
+      }
+    ));
+    return times.map((time, i) => (
+      <div key={i}>
+        <h4>{time.name}</h4>
+        <TimesheetTable times={time.array}
+                        timeBreaks={timeBreaks}
+                        colorGenerator={this.colorGenerator}
+                        handleTimesChange={(times) => this.handleTimesChange(i, times)} />
+      </div>
+    ));
+  },
+  
   render: function() {
     var timeBreaks = this.timeBreaks();
-    var times = [
-      this.converter.calculateTimesForPartitions(this.state.days[0], timeBreaks),
-      this.converter.calculateTimesForPartitions(this.state.days[1], timeBreaks),
-    ];
     return (
       <div className="row">
         <div className="col-sm-7">
@@ -176,31 +229,11 @@ var Timesheet = React.createClass({
                              colorGenerator={this.colorGenerator}
                              minorMarkers={15}
                              majorMarkers={60} />
-          
-          <PartitionSelector partitions={this.applyTooltips(this.state.days[0])}
-                             handlePartitionChange={(p) => this.handlePartitionChange(0, p)}
-                             colorGenerator={this.colorGenerator}
-                             labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
-                             minorMarkers={15}
-                             majorMarkers={60} />
                            
-         <PartitionSelector partitions={this.applyTooltips(this.state.days[1])}
-                             handlePartitionChange={(p) => this.handlePartitionChange(1, p)}
-                             colorGenerator={this.colorGenerator}
-                             labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
-                             minorMarkers={15}
-                             majorMarkers={60} />
-                           
-         <TimesheetTable times={times[0]}
-                          timeBreaks={timeBreaks}
-                          colorGenerator={this.colorGenerator}
-                          handleTimesChange={this.handleTimesChange} />
-                        
-         <TimesheetTable times={times[1]}
-                          timeBreaks={timeBreaks}
-                          colorGenerator={this.colorGenerator}
-                          handleTimesChange={this.handleTimesChange} />
+          {this.renderDayPartitions(timeBreaks)}
+          {this.renderDayTables(timeBreaks)}
         </div>
+        
         <div className="col-sm-5">
           <Dock activeActivities={this.getActiveActivities()}
                 colorGenerator={this.colorGenerator}

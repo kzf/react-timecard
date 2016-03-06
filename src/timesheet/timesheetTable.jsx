@@ -37,7 +37,7 @@ var TimesheetTable = React.createClass({
         timeRows.push(
           <tr key={2*i + 1}
               className="time-break active">
-            <td colSpan="3"></td>
+            <td colSpan="4"></td>
           </tr>
         );
         currentTimeBreakIndex++;
