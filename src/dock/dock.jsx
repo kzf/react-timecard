@@ -28,7 +28,7 @@ var Dock = React.createClass({
           title: panel.title,
           activities: panel.activities,
           source: panel.source,
-          loading: panel.loading || ((i + 1 === key) && !panel.loaded && this.loadPanel(panel, i)),
+          loading: panel.loading || ((i + 2 === key) && !panel.loaded && this.loadPanel(panel, i)),
           loaded: panel.loaded,
         }
       )),
@@ -41,8 +41,35 @@ var Dock = React.createClass({
           title: 'Active',
           activities: this.props.activeActivities,
           loaded: true,
-        }].concat(this.state.panels),
-        activePanel = panels[this.state.activePanel];
+        }, {
+          title: 'Search',
+          loaded: true,
+          searches: [{
+            source: '../custom/samples/ticket_autocomplete.json',
+            placeholder: 'Search Tickets...',
+            getActivities: function(data) {
+              return {
+                label: 'Search Results',
+                activities: data.map((d) => ({
+                  value: '#' + d.value,
+                  tooltip: d.description,
+                }))
+              };
+            }
+          }, {
+            source: '../custom/samples/project_autocomplete.json',
+            placeholder: 'Search Projects...',
+            getActivities: function(data) {
+              return {
+                label: 'Search Results',
+                activities: data.map((d) => ({
+                  value: d.value,
+                  tooltip: d.customer + ' - ' + d.pool,
+                }))
+              };
+            }
+          }]
+        }].concat(this.state.panels);
     return (
       <div>
         <ul className="nav nav-tabs dock-types">
@@ -54,10 +81,14 @@ var Dock = React.createClass({
             </li>
           ))}
         </ul>
-        <DockPanel colorGenerator={this.props.colorGenerator}
-                   name={activePanel.title}
-                   loaded={activePanel.loaded}
-                   activities={activePanel.activities}/>
+        {panels.map((panel, i) => (
+          <DockPanel colorGenerator={this.props.colorGenerator}
+                     visible={i === this.state.activePanel}
+                     name={panel.title}
+                     loaded={panel.loaded}
+                     searches={panel.searches}
+                     activities={panel.activities}/>
+        ))}
       </div>
     );
   }

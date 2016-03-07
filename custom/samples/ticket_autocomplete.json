@@ -1,0 +1,102 @@
+[  
+  {  
+    "value":21660,
+    "description":"Winchester - Avenue 7 site install",
+    "customer":"WINCHESTER"
+  },
+  {  
+    "value":18893,
+    "description":"Winchester - Pronto 730 upgrade",
+    "customer":"WINCHESTER"
+  },
+  {  
+    "value":22318,
+    "description":"Riverside - Live - drop down boxes not populating info correctly",
+    "customer":"RIVERSIDEM"
+  },
+  {  
+    "value":22182,
+    "description":"CRM - XSG - KBCRM forgotten password error",
+    "customer":"PRONTOPLUS"
+  },
+  {  
+    "value":22151,
+    "description":"Morco Test - Packages not calculated",
+    "customer":"MORCO"
+  },
+  {  
+    "value":22365,
+    "description":"Rener - changes after Phase 1 test",
+    "customer":"RENER"
+  },
+  {  
+    "value":21589,
+    "description":"Noni B - Quick Checkout Mini Cart",
+    "customer":"NONIB"
+  },
+  {  
+    "value":22319,
+    "description":"AVE - Avenue deal pricing not calculating correctly",
+    "customer":"ADEAL"
+  },
+  {  
+    "value":22164,
+    "description":"AVE - Obsolete Message-Promtp in RadShop not required",
+    "customer":"ADRAD"
+  },
+  {  
+    "value":20916,
+    "description":"AVE - AVenue: Unable to enter a Decimal Qty",
+    "customer":"MORCO"
+  },
+  {  
+    "value":20191,
+    "description":"OTH - XSG - PO Portal hangs on Ipad",
+    "customer":"RIVERSIDEM"
+  },
+  {  
+    "value":15211,
+    "description":"Scrum/ Meeting/ Support catchup/Training/Reports/Timesheets/Monthly Invoicing",
+    "customer":"Internal"
+  },
+  {  
+    "value":10862,
+    "description":"Scrum - Weekly",
+    "customer":"Internal"
+  },
+  {  
+    "value":21526,
+    "description":"Morco - test - Price in Avenue not agreeing with Pronto ",
+    "customer":"MORCO"
+  },
+  {  
+    "value":21283,
+    "description":"Dominie - Pronto 730 upgrade",
+    "customer":"DOMINIE"
+  },
+  {  
+    "value":21428,
+    "description":"Dominie - Avenue 7 upgrade",
+    "customer":"DOMINIE"
+  },
+  {  
+    "value":22371,
+    "description":"Radshop - Live - Child codes from Tree maintenance ",
+    "customer":"ADRAD"
+  },
+  {  
+    "value":21797,
+    "description":"FAST FUTURE BRANDS - Site install",
+    "customer":"FASTFUTURE"
+  },
+  {  
+    "value":20901,
+    "description":"NATRAD - Franchise Trade Account Users Stored as Contacts in CRM",
+    "customer":"ADRAD"
+  },
+  {  
+    "value":14770,
+    "description":"working on nagios issues",
+    "customer":"Internal"
+  }
+]
