@@ -121,6 +121,7 @@ var PartitionSelector = React.createClass({
     var partitions = this.props.partitions.concat([]);
     partitions.splice(key, 1, {value: value, tooltip: tooltip, size: partition.size});
     this.setPartitions(partitions);
+    if (this.props.handleDrop) this.props.handleDrop(key, {value: value, tooltip: tooltip});
   },
   
   // MOUNTING & UNMOUNTING

@@ -191,6 +191,7 @@ var Timesheet = React.createClass({
                              handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
                              colorGenerator={this.colorGenerator}
                              labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
+                             handleDrop={(i, cell) => this.tooltips[cell.value] = cell.tooltip}
                              minorMarkers={15}
                              majorMarkers={60} />
         </div>
