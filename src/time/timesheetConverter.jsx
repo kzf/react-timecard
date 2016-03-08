@@ -94,13 +94,73 @@ class TimesheetConverter {
     // TODO: Convert times into partitions
     
     // preprocess the times so that they never cross a timeBreak boundary
+    var timeBreakIndex = 0,
+        scratchTimes = times.map((time) => (
+          {
+            value: time.value,
+            tooltip: time.tooltip,
+            startTime: time.startTime,
+            endTime: time.endTime,
+          }
+        )), // working space for modifying times in-place
+        splitTimes = [],
+        timeIndex = 0,
+        time, timeBreak, endTime;
+    
+    while (timeIndex < scratchTimes.length) {
+      time = scratchTimes[timeIndex];
+      timeBreak = timeBreaks[timeBreakIndex];
+      if (!timeBreak) {
+        break; // we ran out of timeBreaks so we can stop
+      } else if (time.endTime.lessThanEq(timeBreak[0])) {
+        // Do nothing, time finished before this timeBreak
+      } else if (time.startTime.lessThan(timeBreak[0])) {
+        // Time overlaps the start of the timebreak, trim the start.
+        endTime = time.endTime;
+        if (timeBreak[1].lessThan(endTime)) {
+          endTime = timeBreak[1];
+          // reprocess this time, for the next time break
+          timeIndex--;
+          time.startTime = timeBreak[1];
+          timeBreakIndex++; //move on to next time break
+        }
+        splitTimes.push({
+          value: time.value,
+          tooltip: time.tooltip,
+          startTime: timeBreak[0],
+          endTime: endTime,
+        });
+        // If we get to this point then the time comes after the start of the timeBreak
+      } else if (timeBreak[1].lessThanEq(time.startTime)) {
+        // time is completely outside of this time break
+        timeBreakIndex++;
+        timeIndex--; // reprocess this time
+      } else if (timeBreak[1].lessThanEq(time.endTime)) {
+        // time break end is inside the time interval
+        endTime = timeBreak[1];
+        splitTimes.push({
+          value: time.value,
+          tooltip: time.tooltip,
+          startTime: time.startTime,
+          endTime: endTime,
+        })
+        // reprocess this time, for the next time break
+        timeIndex--;
+        time.startTime = timeBreak[1];
+        timeBreakIndex++; //move on to next time break
+      } else {
+        // time is completely inside the time break
+        splitTimes.push(time);
+      }
+      timeIndex++;
+    }
     
     
     var partitions = [],
-        timeBreakIndex = 0,
         lastPartition,
         lastEndTime;
-    times.forEach(function(time) {
+    timeBreakIndex = 0;
+    splitTimes.forEach(function(time) {
       var size = time.endTime.minutesAfter(lastEndTime || time.startTime);
       if (size < 0) size = 0;
       // If previous partition was the same then add this one onto it, otherwise create a new partition
@@ -119,5 +179,35 @@ class TimesheetConverter {
       }
     });
     return partitions;
+  }
+  
+  calculatePartitionsForInitialTimes(initialTimes, timeBreaks) {
+    // NOT Assuming that the total size of times is equal to total size of timeBreaks
+    // Convert the intialTimes to a new times array which has 
+    var timeBreakIndex = 0,
+        lastEndTime = timeBreaks[timeBreakIndex][0],
+        times = [];
+    
+    initialTimes.forEach(function(time, i) {
+      // Do nothing if the time is negative duration or we have no start time
+      if (!time.startTime || time.endTime.lessThan(time.startTime)) return;
+      // If we have no end time then set end time to start Time
+      if (!time.endTime) time.endTime = time.startTime;
+      // If we missed a spot, add a time to fill it
+      if (lastEndTime && lastEndTime.lessThan(time.startTime)) {
+        times.push({startTime: lastEndTime, endTime: time.startTime});
+        lastEndTime = time.startTime;
+      }
+      // Add this time
+      times.push({
+        value: time.value,
+        tooltip: time.tooltip,
+        startTime: lastEndTime,
+        endTime: time.endTime,
+      });
+      lastEndTime = time.endTime;
+    });
+    
+    return this.calculatePartitionsForTimes(times, timeBreaks);
   }
 }

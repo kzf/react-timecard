@@ -6,7 +6,9 @@ var Timesheet = React.createClass({
   
   converter: new TimesheetConverter(),
   colorGenerator: new ColorGenerator(),
-  tooltips: {},
+  tooltips: {
+    working: 'Work Hours',
+  },
   
   getInitialState: function() {
     var workHours = [
@@ -19,19 +21,24 @@ var Timesheet = React.createClass({
         timeBreaks = this.timeBreaks(workHours);
         
     this.colorGenerator.addColor(undefined, '#eee');
+    
+    this.props.initialTimes.forEach(function(day) {
+      day.times.forEach(function(time) {
+        this.tooltips[time.value] = time.tooltip;
+      }.bind(this))
+    }.bind(this));
     return {
       workHours: workHours,
-      days: this.props.initialTimes.map(function (day) {
-        var basicPartitions = this.converter.calculatePartitionsForTimes(day.times.map((time) => (
+      days: this.props.initialTimes.map(function(day) {
+        var partitions = this.converter.calculatePartitionsForInitialTimes(day.times.map((time) => (
               {
                 value: time.value,
                 id: time.id,
-                startTime: new Time(time.startTime),
-                endTime: new Time(time.endTime),
+                tooltip: time.tooltip,
+                startTime: time.startTime && new Time(time.startTime),
+                endTime: time.endTime && new Time(time.endTime),
               }
-            )), timeBreaks),
-            basicTimes = this.converter.calculateTimesForPartitions(basicPartitions, timeBreaks),
-            partitions = this.converter.calculatePartitionsForTimes(basicTimes, timeBreaks);
+            )), timeBreaks);
         return {
           name: day.name,
           date: day.date,

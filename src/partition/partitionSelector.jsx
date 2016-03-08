@@ -50,7 +50,7 @@ var PartitionSelector = React.createClass({
         rightSize = partition.size - leftSize;
     var partitions = this.props.partitions.concat([]);
     partitions.splice(key, 1, {value: partition.value, tooltip: partition.tooltip, size: rightSize});
-    partitions.splice(key, 0, {size: leftSize});
+    partitions.splice(key, 0, {value: partition.value, tooltip: partition.tooltip, size: leftSize});
     this.setPartitions(partitions);
   },
   
@@ -153,9 +153,14 @@ var PartitionSelector = React.createClass({
         lastMarker += markerStep;
       }
     }
-    return markers.map((m, i) => (
-      <div key={i} className={'marker '+className} style={{left: this.percentAsString(m/totalSize)}}></div>
-    ));
+    return markers.map(function(m, i) {
+      var percent = m/totalSize;
+      if (percent > 0.01 && percent < 0.99) {
+        return (
+          <div key={i} className={'marker '+className} style={{left: this.percentAsString(percent)}}></div>
+        );
+      }
+    }.bind(this));
   },
   
   renderLabels: function(labels, totalSize) {
