@@ -2,7 +2,6 @@ var DockPanel = React.createClass({
   searchDelay: 400,
   
   getInitialState: function() {
-    console.log(this.props);
     return {
       managesOwnActivities: !!this.props.searches,
       activities: [],
@@ -51,7 +50,6 @@ var DockPanel = React.createClass({
   
   render: function() {
     var activities = this.state.managesOwnActivities ? this.state.activities : this.props.activities;
-    console.log(this.state.managesOwnActivities, this.state, activities);
     if (this.props.visible) {
       if (this.props.loaded) {
         return (

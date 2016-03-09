@@ -182,6 +182,24 @@ var Timesheet = React.createClass({
     xhr.send();
   },
   
+  getHiddenFieldsForValue: function(value) {
+    if (value && value[0] === '#') {
+      return [{
+        name: 'ticket_id',
+        value: value.substr(1),
+      }];
+    } else {
+      return [{
+        name: 'project_code',
+        value: value,
+      }];
+    }
+  },
+  
+  generateInputName: function(date, index, nameBase) {
+    return 'user[work_logs_attributes][][' + nameBase + ']';
+  },
+  
   renderDayPartitions: function(timeBreaks) {
     return (
       this.state.days.map((day, i) => (
@@ -210,6 +228,8 @@ var Timesheet = React.createClass({
       <div key={i}>
         <h4>{time.name}</h4>
         <TimesheetTable times={time.array}
+                        getHiddenFieldsForValue={this.getHiddenFieldsForValue}
+                        generateInputName={this.generateInputName}
                         timeBreaks={timeBreaks}
                         colorGenerator={this.colorGenerator}
                         handleTimesChange={(times) => this.handleTimesChange(i, times)} />

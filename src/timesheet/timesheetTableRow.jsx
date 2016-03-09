@@ -39,6 +39,14 @@ var TimesheetTableRow = React.createClass({
     this.setState({nonTimeValues: undefined});
   },
   
+  renderHiddenFields: function() {
+    return this.props.hiddenFields.map((f) => (
+      <input type="hidden"
+             name={this.props.generateInputName(this.props.date, this.props.index, f.name)}
+             value={f.value} />
+    ));
+  },
+  
   render: function() {
     var values = Object.assign({}, this.state.nonTimeValues);
     if (values.endTime === undefined) values.endTime = this.props.endTime.toString24();
@@ -54,6 +62,7 @@ var TimesheetTableRow = React.createClass({
                  className="form-control"
                  value={this.props.name}
                  readOnly="readonly" />
+          {this.renderHiddenFields()}
         </td>
         <td>
           <input type="time"

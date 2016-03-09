@@ -82,7 +82,8 @@ var Dock = React.createClass({
           ))}
         </ul>
         {panels.map((panel, i) => (
-          <DockPanel colorGenerator={this.props.colorGenerator}
+          <DockPanel key={i}
+                     colorGenerator={this.props.colorGenerator}
                      visible={i === this.state.activePanel}
                      name={panel.title}
                      loaded={panel.loaded}

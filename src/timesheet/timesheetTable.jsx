@@ -25,6 +25,10 @@ var TimesheetTable = React.createClass({
       timeRows.push(<TimesheetTableRow
                          key={2*i}
                          colorGenerator={this.props.colorGenerator}
+                         date={i}
+                         index={i}
+                         hiddenFields={this.props.getHiddenFieldsForValue(t.value)}
+                         generateInputName={this.props.generateInputName}
                          readOnlyStart={initialRow}
                          readOnlyEnd={finalRow}
                          index={i}
