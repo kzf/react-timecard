@@ -40,9 +40,10 @@ var TimesheetTableRow = React.createClass({
   },
   
   renderHiddenFields: function() {
-    return this.props.hiddenFields.map((f) => (
+    return this.props.hiddenFields.map((f, i) => (
       <input type="hidden"
              name={this.props.generateInputName(this.props.date, this.props.index, f.name)}
+             key={i}
              value={f.value} />
     ));
   },

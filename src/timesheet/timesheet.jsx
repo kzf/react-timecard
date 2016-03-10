@@ -1,3 +1,4 @@
+console.log('got timsheet')
 var Timesheet = React.createClass({
   MIN_WORK_MINUTES: 7.5 * 60,
   START_TIME: new Time(7, 0),
@@ -5,53 +6,46 @@ var Timesheet = React.createClass({
   
   converter: new TimesheetConverter(),
   colorGenerator: new ColorGenerator(),
-  tooltips: {
-    'A': 'First Tooltip',
-    'B': 'Second Tooltip',
-    'C': 'Third Tooltip',
-    'D': 'Fourth Tooltip',
-    'working': 'Work Hours',
-  },
+  tooltips: {},
   
   getInitialState: function() {
-    var duration = this.MIN_WORK_MINUTES;
+    var workHours = [
+          {size: 120},
+          {value: 'working', size: 210},
+          {size: 60},
+          {value: 'working', size: 240},
+          {size: 90},
+        ],
+        timeBreaks = this.timeBreaks(workHours);
+        
     this.colorGenerator.addColor(undefined, '#eee');
     return {
-      workHours: [
-        {size: 120},
-        {value: 'working', size: 210},
-        {size: 60},
-        {value: 'working', size: 240},
-        {size: 90},
-      ],
-      days: [
-        {
-          name: 'Monday',
-          partitions: [{size: duration}],
-        },
-        {
-          name: 'Tuesday',
-          partitions: [{size: duration}],
-        },
-        {
-          name: 'Wednesday',
-          partitions: [{size: duration}],
-        },
-        {
-          name: 'Thursday',
-          partitions: [{size: duration}],
-        },
-        {
-          name: 'Friday',
-          partitions: [{size: duration}],
-        },
-      ],
+      workHours: workHours,
+      days: this.props.initialTimes.map(function (day) {
+        var basicPartitions = this.converter.calculatePartitionsForTimes(day.times.map((time) => (
+              {
+                value: time.value,
+                id: time.id,
+                startTime: new Time(time.startTime),
+                endTime: new Time(time.endTime),
+              }
+            )), timeBreaks),
+            basicTimes = this.converter.calculateTimesForPartitions(basicPartitions, timeBreaks),
+            partitions = this.converter.calculatePartitionsForTimes(basicTimes, timeBreaks);
+        return {
+          name: day.name,
+          date: day.date,
+          partitions: partitions,
+          partitionsHistory: [],
+          partitionsFuture: [],
+        };
+      }.bind(this)),
     };
   },
   
-  timeBreaks: function() {
+  timeBreaks: function(workHours) {
     return this.converter.calculateTimesForPartitions(
-             this.state.workHours,
+             workHours || this.state.workHours,
              [[this.START_TIME, this.END_TIME]]
            ).filter(
              (t) => t.value
@@ -67,23 +61,30 @@ var Timesheet = React.createClass({
         newTotalSize = newWorkHours.filter((p) => p.value == 'working').reduce((a, b) => a + b.size, 0),
         oldTotalSize = partitions.reduce((a, b) => a + b.size, 0),
         multiplier = newTotalSize/oldTotalSize;
-    newDays.splice(key, 1, {
-      name: this.state.days[key].name,
-      partitions: partitions.map((p) => ({value: p.value, size: p.size * multiplier})),
-    })
+    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], partitions.map((p) => ({value: p.value, size: p.size * multiplier}))));
     this.setState({
       workHours: newWorkHours,
       days: newDays,
-      // resize partitions to have the correct size
     });
+  },
+  
+  getUpdatedDay: function(day, newPartitions) {
+    return {
+      name: day.name,
+      date: day.date,
+      partitions: newPartitions,
+      partitionsHistory: day.partitionsHistory.concat([day.partitions]),
+      partitionsFuture: [],
+    }
+  },
+  
+  undo: function(key) {
+    
   },
   
   handlePartitionChange: function(key, newPartitions) {
     var newDays = this.state.days.concat([]);
-    newDays.splice(key, 1, {
-      name: this.state.days[key].name,
-      partitions: newPartitions
-    });
+    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], newPartitions));
     this.setState({days: newDays});
   },
   
@@ -94,12 +95,8 @@ var Timesheet = React.createClass({
   },
   
   handleTimesChange: function(key, newTimes) {
-    console.log('handle times change', key, newTimes);
     var newDays = this.state.days.concat([]);
-    newDays.splice(key, 1, {
-      name: this.state.days[key].name,
-      partitions: this.converter.calculatePartitionsForTimes(newTimes, this.timeBreaks())
-    });
+    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], this.converter.calculatePartitionsForTimes(newTimes, this.timeBreaks())));
     this.setState({days: newDays});
   },
   
@@ -200,6 +197,24 @@ var Timesheet = React.createClass({
     return 'user[work_logs_attributes][][' + nameBase + ']';
   },
   
+  renderHiddenFields: function() {
+    return (
+      <div>
+        <input type="hidden" name="method" value="_patch" />
+        {this.props.initialTimes.map((day, i) => (
+          <div key={i}>
+            {day.times.map((time, j) => (
+              <div key={j}>
+                <input type="hidden" name={this.generateInputName(day.date, i, 'id')} value={time.id}/>
+                <input type="hidden" name={this.generateInputName(day.date, i, '_destroy')} value="true"/>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+    );
+  },
+  
   renderDayPartitions: function(timeBreaks) {
     return (
       this.state.days.map((day, i) => (
@@ -237,39 +252,65 @@ var Timesheet = React.createClass({
     ));
   },
   
+  renderSubmitButton: function() {
+    return (
+      <div className="row">
+          <div className="col-xs-12">
+              <div className="text-right">
+                  <button type="submit" className="btn btn-primary">Submit</button>
+              </div>
+          </div>
+      </div>
+    );
+  },
+  
   render: function() {
     var timeBreaks = this.timeBreaks();
     return (
-      <div className="row">
-        <div className="col-sm-7">
-          <PartitionSelector partitions={this.applyTooltips(this.state.workHours)}
-                             customClass={'work-hours-select'}
-                             handlePartitionChange={(w) => this.handleWorkHoursChange(0, w)}
-                             validatePartitions={this.validateWorkHours}
-                             labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
-                             colorGenerator={this.colorGenerator}
-                             minorMarkers={15}
-                             majorMarkers={60} />
-                           
-          {this.renderDayPartitions(timeBreaks)}
-          {this.renderDayTables(timeBreaks)}
-        </div>
+      <form ref='timesheetForm'
+            action={this.props.formAction}
+            method={this.props.formMethod || 'post'}
+            onSubmit={this.handleFormSubmit}>
+            
+        {this.renderHiddenFields()}
         
-        <div className="col-sm-5">
-          <Dock activeActivities={this.getActiveActivities()}
-                colorGenerator={this.colorGenerator}
-                panels={[
-                  {
-                    title: 'This Week',
-                    source: this.loadCurrentActivity,
-                  },
-                  {
-                    title: 'Last Week',
-                    source: this.loadLastWeeksTimesheet,
-                  }
-                ]}/>
+        <div className="row">
+          <div className="col-sm-7">
+            <PartitionSelector partitions={this.applyTooltips(this.state.workHours)}
+                               customClass={'work-hours-select'}
+                               handlePartitionChange={(w) => this.handleWorkHoursChange(0, w)}
+                               validatePartitions={this.validateWorkHours}
+                               labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
+                               colorGenerator={this.colorGenerator}
+                               minorMarkers={15}
+                               majorMarkers={60} />
+                             
+            {this.renderDayPartitions(timeBreaks)}
+            
+            {this.renderSubmitButton()}
+            
+            {this.renderDayTables(timeBreaks)}
+            
+            {this.renderSubmitButton()}
+          </div>
+          
+          
+          <div className="col-sm-5">
+            <Dock activeActivities={this.getActiveActivities()}
+                  colorGenerator={this.colorGenerator}
+                  panels={[
+                    {
+                      title: 'This Week',
+                      source: this.loadCurrentActivity,
+                    },
+                    {
+                      title: 'Last Week',
+                      source: this.loadLastWeeksTimesheet,
+                    }
+                  ]}/>
+          </div>
         </div>
-      </div>
+      </form>
     );
   }
 });
