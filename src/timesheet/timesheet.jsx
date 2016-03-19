@@ -1,4 +1,3 @@
-console.log('got timsheet')
 var Timesheet = React.createClass({
   MIN_WORK_MINUTES: 7.5 * 60,
   START_TIME: new Time(7, 0),
@@ -11,14 +10,15 @@ var Timesheet = React.createClass({
   },
   
   getInitialState: function() {
-    var workHours = [
+    // TODO: Handle timeBreaks for non-default work hours being reloaded
+    var defaultWorkHours = [
           {size: 120},
           {value: 'working', size: 210},
           {size: 60},
           {value: 'working', size: 240},
           {size: 90},
         ],
-        timeBreaks = this.timeBreaks(workHours);
+        timeBreaks = this.timeBreaks(defaultWorkHours);
         
     this.colorGenerator.addColor(undefined, '#eee');
     
@@ -28,7 +28,7 @@ var Timesheet = React.createClass({
       }.bind(this))
     }.bind(this));
     return {
-      workHours: workHours,
+      defaultWorkHours: defaultWorkHours,
       days: this.props.initialTimes.map(function(day) {
         var partitions = this.converter.calculatePartitionsForInitialTimes(day.times.map((time) => (
               {
@@ -45,6 +45,7 @@ var Timesheet = React.createClass({
           partitions: partitions,
           partitionsHistory: [],
           partitionsFuture: [],
+          workHours: false,
         };
       }.bind(this)),
     };
@@ -52,7 +53,7 @@ var Timesheet = React.createClass({
   
   timeBreaks: function(workHours) {
     return this.converter.calculateTimesForPartitions(
-             workHours || this.state.workHours,
+             workHours || this.state.defaultWorkHours,
              [[this.START_TIME, this.END_TIME]]
            ).filter(
              (t) => t.value
@@ -68,20 +69,20 @@ var Timesheet = React.createClass({
         newTotalSize = newWorkHours.filter((p) => p.value == 'working').reduce((a, b) => a + b.size, 0),
         oldTotalSize = partitions.reduce((a, b) => a + b.size, 0),
         multiplier = newTotalSize/oldTotalSize;
-    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], partitions.map((p) => ({value: p.value, size: p.size * multiplier}))));
+    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], partitions.map((p) => ({value: p.value, size: p.size * multiplier})), newWorkHours));
     this.setState({
-      workHours: newWorkHours,
       days: newDays,
     });
   },
   
-  getUpdatedDay: function(day, newPartitions) {
+  getUpdatedDay: function(day, newPartitions, newWorkHours) {
     return {
       name: day.name,
       date: day.date,
       partitions: newPartitions,
       partitionsHistory: day.partitionsHistory.concat([day.partitions]),
       partitionsFuture: [],
+      workHours: newWorkHours || day.workHours,
     }
   },
   
@@ -227,6 +228,15 @@ var Timesheet = React.createClass({
       this.state.days.map((day, i) => (
         <div key={i}>
           <h4>{day.name}</h4>
+          <PartitionSelector partitions={this.applyTooltips(day.workHours || this.state.defaultWorkHours)}
+                             customClass={'work-hours-select'}
+                             handlePartitionChange={(w) => this.handleWorkHoursChange(i, w)}
+                             validatePartitions={this.validateWorkHours}
+                             labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
+                             colorGenerator={this.colorGenerator}
+                             minorMarkers={15}
+                             majorMarkers={60} />
+                           
           <PartitionSelector partitions={this.applyTooltips(day.partitions)}
                              handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
                              colorGenerator={this.colorGenerator}
@@ -283,15 +293,6 @@ var Timesheet = React.createClass({
         
         <div className="row">
           <div className="col-sm-7">
-            <PartitionSelector partitions={this.applyTooltips(this.state.workHours)}
-                               customClass={'work-hours-select'}
-                               handlePartitionChange={(w) => this.handleWorkHoursChange(0, w)}
-                               validatePartitions={this.validateWorkHours}
-                               labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
-                               colorGenerator={this.colorGenerator}
-                               minorMarkers={15}
-                               majorMarkers={60} />
-                             
             {this.renderDayPartitions(timeBreaks)}
             
             {this.renderSubmitButton()}
