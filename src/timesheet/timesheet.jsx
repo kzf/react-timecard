@@ -223,29 +223,35 @@ var Timesheet = React.createClass({
     );
   },
   
+  renderDayPartition: function(day, i) {
+    var timeBreaks = this.timeBreaks(day.workHours),
+        markersAndLabels = this.converter.calculateMarkersAndLabelsForTimeBreaks(timeBreaks);
+    return (
+      <div key={i}>
+        <h4>{day.name}</h4>
+        <PartitionSelector partitions={this.applyTooltips(day.workHours || this.state.defaultWorkHours)}
+                           customClass={'work-hours-select'}
+                           handlePartitionChange={(w) => this.handleWorkHoursChange(i, w)}
+                           validatePartitions={this.validateWorkHours}
+                           labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
+                           colorGenerator={this.colorGenerator}
+                           minorMarkers={15}
+                           majorMarkers={60} />
+                         
+        <PartitionSelector partitions={this.applyTooltips(day.partitions)}
+                           handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
+                           colorGenerator={this.colorGenerator}
+                           labels={markersAndLabels.labels}
+                           handleDrop={(i, cell) => this.tooltips[cell.value] = cell.tooltip}
+                           minorMarkers={markersAndLabels.minorMarkers}
+                           majorMarkers={markersAndLabels.majorMarkers} />
+      </div>
+    );
+  },
+  
   renderDayPartitions: function(timeBreaks) {
     return (
-      this.state.days.map((day, i) => (
-        <div key={i}>
-          <h4>{day.name}</h4>
-          <PartitionSelector partitions={this.applyTooltips(day.workHours || this.state.defaultWorkHours)}
-                             customClass={'work-hours-select'}
-                             handlePartitionChange={(w) => this.handleWorkHoursChange(i, w)}
-                             validatePartitions={this.validateWorkHours}
-                             labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
-                             colorGenerator={this.colorGenerator}
-                             minorMarkers={15}
-                             majorMarkers={60} />
-                           
-          <PartitionSelector partitions={this.applyTooltips(day.partitions)}
-                             handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
-                             colorGenerator={this.colorGenerator}
-                             labels={this.converter.calculateLabelsForTimeBreaks(timeBreaks)}
-                             handleDrop={(i, cell) => this.tooltips[cell.value] = cell.tooltip}
-                             minorMarkers={15}
-                             majorMarkers={60} />
-        </div>
-      ))
+      this.state.days.map((day, i) => this.renderDayPartition(day, i))
     );
   },
   
@@ -293,7 +299,7 @@ var Timesheet = React.createClass({
         
         <div className="row">
           <div className="col-sm-7">
-            {this.renderDayPartitions(timeBreaks)}
+            {this.renderDayPartitions()}
             
             {this.renderSubmitButton()}
             

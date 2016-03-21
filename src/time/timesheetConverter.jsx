@@ -22,6 +22,24 @@ class TimesheetConverter {
     return labels;
   }
   
+  calculateMarkersAndLabelsForTimeBreaks(timeBreaks) {
+    var labels = [],
+        majorMarkers = [],
+        minorMarkers = [],
+        minutesSoFar = 0;
+    timeBreaks.forEach(function(timeBreak) {
+      labels = labels.concat(this.calculateLabelsFor(timeBreak[0], timeBreak[1]).map((label) => (
+        [label[0], label[1] + minutesSoFar]
+      )));
+      labels.forEach((label) => minorMarkers.push(label[1]));
+      minutesSoFar += timeBreak[1].minutesAfter(timeBreak[0]);
+      majorMarkers.push(minutesSoFar);
+    }.bind(this));
+    return {
+      labels, majorMarkers, minorMarkers
+    };
+  }
+  
   splitPartitionsFromTimeBreaks(partitions, timeBreaks) {
     // Split any partitions that overlap the boundaries between timeBreaks
     // into a portion before the gap and a portion after
