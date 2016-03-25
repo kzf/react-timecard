@@ -31,6 +31,59 @@
     <script src="dist/app.js"></script>
     
     <script>
+      var loadCurrentActivity = function(callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', '/api_samples/activity.json', true);
+        xhr.onreadystatechange = function() {
+          var data, categories;
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              data = JSON.parse(xhr.responseText);
+              categories = data.actions.days.map((day) => (
+                {
+                  label: day.date,
+                  activities: day.actions.map((action) => (
+                    {
+                      value: '#' + action.ticket.id,
+                      tooltip: action.ticket.title,
+                      badge: action.time,
+                    }
+                  )),
+                }
+              ));
+              callback(categories);
+            }
+          }
+        };
+        xhr.send();
+      };
+    
+      var loadLastWeeksTimesheet = function(callback) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('get', '/api_samples/last_week.json', true);
+        xhr.onreadystatechange = function() {
+          var data, categories;
+          if (xhr.readyState === 4) {
+            if (xhr.status === 200) {
+              data = JSON.parse(xhr.responseText);
+              categories = data.map((day) => (
+                {
+                  label: day.date,
+                  activities: day.work_logs.map((action) => (
+                    {
+                      value: '#' + action.ticket_id,
+                      tooltip: action.title,
+                    }
+                  )),
+                }
+              ));
+              callback(categories);
+            }
+          }
+        };
+        xhr.send();
+      };
+    
       window.onload = function() {
         renderTimesheet(
           [
@@ -75,7 +128,17 @@
               ]
             }
           ],
-          '/actions/something'
+          '/actions/something',
+          [
+            {
+              title: 'This Week',
+              source: this.loadCurrentActivity,
+            },
+            {
+              title: 'Last Week',
+              source: this.loadLastWeeksTimesheet,
+            }
+          ]
         );
       }
     </script>

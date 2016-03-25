@@ -2,13 +2,13 @@ var Timesheet = React.createClass({
   MIN_WORK_MINUTES: 7.5 * 60,
   START_TIME: new Time(7, 0),
   END_TIME: new Time(7, 0, 'pm'),
-  
+
   converter: new TimesheetConverter(),
   colorGenerator: new ColorGenerator(),
   tooltips: {
     working: 'Work Hours',
   },
-  
+
   getInitialState: function() {
     // TODO: Handle timeBreaks for non-default work hours being reloaded
     var defaultWorkHours = [
@@ -19,9 +19,10 @@ var Timesheet = React.createClass({
           {size: 90},
         ],
         timeBreaks = this.timeBreaks(defaultWorkHours);
-        
+
     this.colorGenerator.addColor(undefined, '#eee');
-    
+    this.colorGenerator.addColor('working', '#aaa');
+
     this.props.initialTimes.forEach(function(day) {
       day.times.forEach(function(time) {
         this.tooltips[time.value] = time.tooltip;
@@ -50,7 +51,7 @@ var Timesheet = React.createClass({
       }.bind(this)),
     };
   },
-  
+
   timeBreaks: function(workHours) {
     return this.converter.calculateTimesForPartitions(
              workHours || this.state.defaultWorkHours,
@@ -61,57 +62,67 @@ var Timesheet = React.createClass({
              (t) => [t.startTime, t.endTime]
            );
   },
-  
-  handleWorkHoursChange: function(key, newWorkHours) {
+
+  handleWorkHoursChange: function(key, newWorkHours, valueToChangeTo) {
     // TODO: Update the partitions based on the new work hours
     var partitions = this.state.days[key].partitions,
         newDays = this.state.days.concat([]),
         newTotalSize = newWorkHours.filter((p) => p.value == 'working').reduce((a, b) => a + b.size, 0),
         oldTotalSize = partitions.reduce((a, b) => a + b.size, 0),
         multiplier = newTotalSize/oldTotalSize;
-    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], partitions.map((p) => ({value: p.value, size: p.size * multiplier})), newWorkHours));
+    if (typeof valueToChangeTo === 'undefined') valueToChangeTo = newWorkHours;
+    newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], partitions.map((p) => ({value: p.value, size: p.size * multiplier})), valueToChangeTo));
     this.setState({
       days: newDays,
     });
   },
-  
+
   getUpdatedDay: function(day, newPartitions, newWorkHours) {
     return {
       name: day.name,
       date: day.date,
-      partitions: newPartitions,
+      partitions: (typeof newPartitions === 'undefined' ? day.partitions : newPartitions),
       partitionsHistory: day.partitionsHistory.concat([day.partitions]),
       partitionsFuture: [],
-      workHours: newWorkHours || day.workHours,
+      workHours: (typeof newWorkHours === 'undefined' ? day.workHours : newWorkHours),
     }
   },
-  
+
   undo: function(key) {
-    
+
   },
-  
+
+  toggleCustomWorkHours: function(key) {
+    var day = this.state.days[key];
+    if (day.workHours) {
+      this.handleWorkHoursChange(key, this.state.defaultWorkHours, false);
+    } else {
+      this.handleWorkHoursChange(key, this.state.defaultWorkHours);
+    }
+  },
+
   handlePartitionChange: function(key, newPartitions) {
     var newDays = this.state.days.concat([]);
     newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], newPartitions));
     this.setState({days: newDays});
   },
-  
+
   applyTooltips: function(partitions) {
     return partitions.map((partition) => (
       {value: partition.value, size: partition.size, tooltip: this.tooltips[partition.value]}
     ));
   },
-  
+
   handleTimesChange: function(key, newTimes) {
     var newDays = this.state.days.concat([]);
     newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], this.converter.calculatePartitionsForTimes(newTimes, this.timeBreaks())));
     this.setState({days: newDays});
   },
-  
+
   validateWorkHours: function(workHours) {
     return workHours.filter((p) => p.value).reduce((a,b) => a + b.size, 0) >= this.MIN_WORK_MINUTES;
   },
-  
+
   getActiveActivities: function() {
     var activeActivities = {},
         activeActivitiesArray = [],
@@ -133,7 +144,7 @@ var Timesheet = React.createClass({
       }
     ];
   },
-  
+
   loadCurrentActivity: function(callback) {
     var xhr = new XMLHttpRequest();
     xhr.open('get', '/api_samples/activity.json', true);
@@ -160,7 +171,7 @@ var Timesheet = React.createClass({
     };
     xhr.send();
   },
-  
+
   loadLastWeeksTimesheet: function(callback) {
     var xhr = new XMLHttpRequest();
     xhr.open('get', '/api_samples/last_week.json', true);
@@ -186,7 +197,7 @@ var Timesheet = React.createClass({
     };
     xhr.send();
   },
-  
+
   getHiddenFieldsForValue: function(value) {
     if (value && value[0] === '#') {
       return [{
@@ -200,11 +211,11 @@ var Timesheet = React.createClass({
       }];
     }
   },
-  
+
   generateInputName: function(date, index, nameBase) {
     return 'user[work_logs_attributes][][' + nameBase + ']';
   },
-  
+
   renderHiddenFields: function() {
     return (
       <div>
@@ -222,13 +233,13 @@ var Timesheet = React.createClass({
       </div>
     );
   },
-  
+
   renderDayPartition: function(day, i) {
-    var timeBreaks = this.timeBreaks(day.workHours),
-        markersAndLabels = this.converter.calculateMarkersAndLabelsForTimeBreaks(timeBreaks);
-    return (
-      <div key={i}>
-        <h4>{day.name}</h4>
+    var timeBreaks = this.timeBreaks(day.workHours || this.state.defaultWorkHours),
+        markersAndLabels = this.converter.calculateMarkersAndLabelsForTimeBreaks(timeBreaks),
+        customWorkHours = null;
+    if (day.workHours) {
+      customWorkHours = (
         <PartitionSelector partitions={this.applyTooltips(day.workHours || this.state.defaultWorkHours)}
                            customClass={'work-hours-select'}
                            handlePartitionChange={(w) => this.handleWorkHoursChange(i, w)}
@@ -237,7 +248,19 @@ var Timesheet = React.createClass({
                            colorGenerator={this.colorGenerator}
                            minorMarkers={15}
                            majorMarkers={60} />
-                         
+      );
+    }
+    return (
+      <div key={i} className="timesheet-partition-day">
+        <h4>{day.name}</h4>
+        <label>
+          <input type="checkbox" checked={!!day.workHours} onClick={() => this.toggleCustomWorkHours(i)}/>
+          Custom Work Hours
+        </label>
+        {customWorkHours}
+
+        <b>{day.workHours.length}</b>
+
         <PartitionSelector partitions={this.applyTooltips(day.partitions)}
                            handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
                            colorGenerator={this.colorGenerator}
@@ -248,33 +271,35 @@ var Timesheet = React.createClass({
       </div>
     );
   },
-  
+
   renderDayPartitions: function(timeBreaks) {
     return (
       this.state.days.map((day, i) => this.renderDayPartition(day, i))
     );
   },
-  
-  renderDayTables: function(timeBreaks) {
-    var times = this.state.days.map((day) => (
-      {
+
+  renderDayTables: function() {
+    var times = this.state.days.map(function (day) {
+      var timeBreaks = this.timeBreaks(day.workHours || this.state.defaultWorkHours);
+      return {
         name: day.name,
         array: this.converter.calculateTimesForPartitions(day.partitions, timeBreaks),
-      }
-    ));
+        timeBreaks: timeBreaks,
+      };
+    }.bind(this));
     return times.map((time, i) => (
       <div key={i}>
         <h4>{time.name}</h4>
         <TimesheetTable times={time.array}
                         getHiddenFieldsForValue={this.getHiddenFieldsForValue}
                         generateInputName={this.generateInputName}
-                        timeBreaks={timeBreaks}
+                        timeBreaks={time.timeBreaks}
                         colorGenerator={this.colorGenerator}
                         handleTimesChange={(times) => this.handleTimesChange(i, times)} />
       </div>
     ));
   },
-  
+
   renderSubmitButton: function() {
     return (
       <div className="row">
@@ -286,45 +311,54 @@ var Timesheet = React.createClass({
       </div>
     );
   },
-  
+
   render: function() {
-    var timeBreaks = this.timeBreaks();
-    return (
-      <form ref='timesheetForm'
-            action={this.props.formAction}
-            method={this.props.formMethod || 'post'}
-            onSubmit={this.handleFormSubmit}>
-            
-        {this.renderHiddenFields()}
-        
-        <div className="row">
-          <div className="col-sm-7">
-            {this.renderDayPartitions()}
-            
-            {this.renderSubmitButton()}
-            
-            {this.renderDayTables(timeBreaks)}
-            
-            {this.renderSubmitButton()}
-          </div>
-          
-          
-          <div className="col-sm-5">
-            <Dock activeActivities={this.getActiveActivities()}
-                  colorGenerator={this.colorGenerator}
-                  panels={[
-                    {
-                      title: 'This Week',
-                      source: this.loadCurrentActivity,
-                    },
-                    {
-                      title: 'Last Week',
-                      source: this.loadLastWeeksTimesheet,
-                    }
-                  ]}/>
+    if (this.settings) {
+      return (
+        <div>
+          <div className="row">
+
           </div>
         </div>
-      </form>
-    );
+      );
+    } else {
+      return (
+        <form ref='timesheetForm'
+              action={this.props.formAction}
+              method={this.props.formMethod || 'post'}
+              onSubmit={this.handleFormSubmit}>
+
+          {this.renderHiddenFields()}
+
+          <div className="row">
+            <div className="col-sm-7">
+              {this.renderDayPartitions()}
+
+              {this.renderSubmitButton()}
+
+              {this.renderDayTables()}
+
+              {this.renderSubmitButton()}
+            </div>
+
+
+            <div className="col-sm-5">
+              <Dock activeActivities={this.getActiveActivities()}
+                    colorGenerator={this.colorGenerator}
+                    panels={[
+                      {
+                        title: 'This Week',
+                        source: this.loadCurrentActivity,
+                      },
+                      {
+                        title: 'Last Week',
+                        source: this.loadLastWeeksTimesheet,
+                      }
+                    ]}/>
+            </div>
+          </div>
+        </form>
+      );
+    }
   }
 });
