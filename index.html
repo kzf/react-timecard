@@ -19,17 +19,17 @@
         </div><!--/.nav-collapse -->
       </div>
     </nav>
-    
+
     <div class="container">
-      
+
       <div id="timesheet">
       </div>
     </div>
-    
+
     <script src="vendor/react.js"></script>
     <script src="vendor/react-dom.js"></script>
     <script src="dist/app.js"></script>
-    
+
     <script>
       var loadCurrentActivity = function(callback) {
         var xhr = new XMLHttpRequest();
@@ -57,7 +57,7 @@
         };
         xhr.send();
       };
-    
+
       var loadLastWeeksTimesheet = function(callback) {
         var xhr = new XMLHttpRequest();
         xhr.open('get', '/api_samples/last_week.json', true);
@@ -83,7 +83,7 @@
         };
         xhr.send();
       };
-    
+
       window.onload = function() {
         renderTimesheet(
           [
@@ -116,7 +116,7 @@
                 {value: '#1284', tooltip: "Morris", id: 18, startTime: '11:00', endTime: '11:30'},
                 {value: '#1284', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '13:20'},
                 {value: '#1284', tooltip: "Morris", id: 18, startTime: '13:20', endTime: '13:40'},
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '17:00', endTime: '17:20'},
+                {value: '#1284', tooltip: "Morris", id: 18, startTime: '14:00', endTime: '14:20'},
                 {value: '#1284', tooltip: "Morris", id: 18, startTime: '17:22', endTime: '17:45'},
               ]
             },

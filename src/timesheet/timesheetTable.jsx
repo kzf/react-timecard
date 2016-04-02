@@ -3,7 +3,7 @@ var TimesheetTable = React.createClass({
     return {
     };
   },
-  
+
   handleEndTimeChange: function(key, value) {
     var times = this.props.times.concat([]),
         newTimeRow = {
@@ -14,7 +14,7 @@ var TimesheetTable = React.createClass({
     times.splice(key, 1, newTimeRow);
     this.props.handleTimesChange(times);
   },
-  
+
   render: function() {
     var currentTimeBreakIndex = 0,
         timeRows = [],
@@ -47,12 +47,12 @@ var TimesheetTable = React.createClass({
         currentTimeBreakIndex++;
       }
       previousStartTime = t.startTime;
-    }.bind(this));             
+    }.bind(this));
     return (
       <div>
         <div className="panel panel-default">
           <div className="panel-heading">
-            <a data-toggle="collapse" href="#">Timesheet Table</a>
+            {this.props.name}
           </div>
           <div className="panel-collapse collapse in">
             <table className="table timesheet-table">

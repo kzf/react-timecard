@@ -259,8 +259,6 @@ var Timesheet = React.createClass({
         </label>
         {customWorkHours}
 
-        <b>{day.workHours.length}</b>
-
         <PartitionSelector partitions={this.applyTooltips(day.partitions)}
                            handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
                            colorGenerator={this.colorGenerator}
@@ -289,8 +287,8 @@ var Timesheet = React.createClass({
     }.bind(this));
     return times.map((time, i) => (
       <div key={i}>
-        <h4>{time.name}</h4>
         <TimesheetTable times={time.array}
+                        name={time.name}
                         getHiddenFieldsForValue={this.getHiddenFieldsForValue}
                         generateInputName={this.generateInputName}
                         timeBreaks={time.timeBreaks}
