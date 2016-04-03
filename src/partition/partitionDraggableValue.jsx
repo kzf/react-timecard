@@ -2,7 +2,11 @@ var PartitionDraggableValue = React.createClass({
   getInitialState: function() {
     return {};
   },
-  
+
+  _class: function(className) {
+    return this.props.getClass ? this.props.getClass(className) : className;
+  },
+
   handleDragStart: function(e) {
     var values = this.props.values,
         key;
@@ -12,7 +16,7 @@ var PartitionDraggableValue = React.createClass({
       }
     }
   },
-  
+
   render: function() {
     return (
       <div className="partition-draggable-value"

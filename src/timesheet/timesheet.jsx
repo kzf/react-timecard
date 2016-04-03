@@ -9,6 +9,17 @@ var Timesheet = React.createClass({
     working: 'Work Hours',
   },
 
+  themes: {
+    'bootstrap': {
+      'ReactTimesheet': '',
+      'ReactTimesheet_container': 'row',
+      'ReactTimesheet_docks': 'col-sm-5',
+      'ReactTimesheet_times': 'col-sm-7',
+      'PartitionSelector_parts': 'progress',
+      'PartitionSelector_bar': 'progress-bar',
+    }
+  },
+
   getInitialState: function() {
     // TODO: Handle timeBreaks for non-default work hours being reloaded
     var defaultWorkHours = [
@@ -86,10 +97,6 @@ var Timesheet = React.createClass({
       partitionsFuture: [],
       workHours: (typeof newWorkHours === 'undefined' ? day.workHours : newWorkHours),
     }
-  },
-
-  undo: function(key) {
-
   },
 
   toggleCustomWorkHours: function(key) {
@@ -241,7 +248,8 @@ var Timesheet = React.createClass({
     if (day.workHours) {
       customWorkHours = (
         <PartitionSelector partitions={this.applyTooltips(day.workHours || this.state.defaultWorkHours)}
-                           customClass={'work-hours-select'}
+                           customClass={'ReactTimesheet_work_hours_select'}
+                           getClass={this._class}
                            handlePartitionChange={(w) => this.handleWorkHoursChange(i, w)}
                            validatePartitions={this.validateWorkHours}
                            labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
@@ -251,7 +259,7 @@ var Timesheet = React.createClass({
       );
     }
     return (
-      <div key={i} className="timesheet-partition-day">
+      <div key={i} className={this._class('ReactTimesheet_part_day')}>
         <h4>{day.name}</h4>
         <label>
           <input type="checkbox" checked={!!day.workHours} onClick={() => this.toggleCustomWorkHours(i)}/>
@@ -262,6 +270,7 @@ var Timesheet = React.createClass({
         <PartitionSelector partitions={this.applyTooltips(day.partitions)}
                            handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
                            colorGenerator={this.colorGenerator}
+                           getClass={this._class}
                            labels={markersAndLabels.labels}
                            handleDrop={(i, cell) => this.tooltips[cell.value] = cell.tooltip}
                            minorMarkers={markersAndLabels.minorMarkers}
@@ -310,6 +319,21 @@ var Timesheet = React.createClass({
     );
   },
 
+  _class: function(className) {
+    var theme = this.getTheme();
+    if (!theme) return className;
+    return className + ' ' + (theme[className] || '');
+  },
+
+  getTheme: function() {
+    var theme = this.props.theme || 'bootstrap';
+    if (typeof theme === 'string') {
+      return this.themes[theme];
+    } else {
+      return theme;
+    }
+  },
+
   render: function() {
     if (this.settings) {
       return (
@@ -324,12 +348,13 @@ var Timesheet = React.createClass({
         <form ref='timesheetForm'
               action={this.props.formAction}
               method={this.props.formMethod || 'post'}
-              onSubmit={this.handleFormSubmit}>
+              onSubmit={this.handleFormSubmit}
+              className={this._class('ReactTimesheet')}>
 
           {this.renderHiddenFields()}
 
-          <div className="row">
-            <div className="col-sm-7">
+          <div className={this._class('ReactTimesheet_container')}>
+            <div className={this._class('ReactTimesheet_times')}>
               {this.renderDayPartitions()}
 
               {this.renderSubmitButton()}
@@ -340,7 +365,7 @@ var Timesheet = React.createClass({
             </div>
 
 
-            <div className="col-sm-5">
+            <div className={this._class('ReactTimesheet_docks')}>
               <Dock activeActivities={this.getActiveActivities()}
                     colorGenerator={this.colorGenerator}
                     panels={[

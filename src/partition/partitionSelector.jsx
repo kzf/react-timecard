@@ -11,7 +11,11 @@ var PartitionSelector = React.createClass({
     };
     this.validatePartitions();
   },
-  
+
+  _class: function(className) {
+    return this.props.getClass ? this.props.getClass(className) : className;
+  },
+
   validatePartitions: function() {
     if (this.props.validatePartitions) {
       if (this.props.validatePartitions(this.props.partitions)) {
@@ -21,27 +25,27 @@ var PartitionSelector = React.createClass({
       }
     }
   },
-  
+
   setPartitions: function(newPartitions) {
     this.props.handlePartitionChange(newPartitions);
     this.validatePartitions();
   },
-  
+
   totalSize: function() {
     // Sum of sizes of all partitions
     return this.props.partitions.map(p => p.size).reduce((a,b) => a + b, 0);
   },
-  
+
   percentAsString: function(width) {
     // Converts 0.42 -> "42%"
     // Using floor here ensures that we never add up to more than 100%
     return Math.floor(width * 10000) / 100 + '%';
   },
-  
+
   splitPartition: function(key, event) {
     // Split the partition at {key} into two partitions by adding a new
     // partition to the left and resizing the original and new partition
-    // so that the 
+    // so that the
     var partition = this.props.partitions[key],
         boundingRect = event.target.getBoundingClientRect(),
         totalWidth = boundingRect.width,
@@ -53,9 +57,9 @@ var PartitionSelector = React.createClass({
     partitions.splice(key, 0, {value: partition.value, tooltip: partition.tooltip, size: leftSize});
     this.setPartitions(partitions);
   },
-  
+
   deletePartition: function(key, event) {
-    // Delete the partition at {key} and resize the left partition 
+    // Delete the partition at {key} and resize the left partition
     // (if it exists, otherwise the right partition) so that it takes
     // up the room of the deleted partition
     var partitionSize = this.props.partitions[key].size,
@@ -66,7 +70,7 @@ var PartitionSelector = React.createClass({
     partitions.splice(neighbourPartitionKey, 1);
     this.setPartitions(partitions);
   },
-  
+
   resizePartitionWithHandleAt: function(key, handleX) {
     var leftPartition = this.props.partitions[key],
         rightPartition = this.props.partitions[key+1],
@@ -84,7 +88,7 @@ var PartitionSelector = React.createClass({
     partitions.splice(key, 0, {value: leftPartition.value, tooltip: leftPartition.tooltip, size: leftSize});
     this.setPartitions(partitions);
   },
-  
+
   // Set or clear the currently dragged handle state
   startDragHandle: function(key, event) {
     this.setState({draggingHandle: key});
@@ -94,7 +98,7 @@ var PartitionSelector = React.createClass({
       this.setState({draggingHandle: false});
     }
   },
-  
+
   moveDragHandle: function(event) {
     // If we are currently dragging one of the handles, move it to
     // the mouse cursor position
@@ -103,18 +107,18 @@ var PartitionSelector = React.createClass({
       this.resizePartitionWithHandleAt(key, event.clientX)
     }
   },
-  
+
   handleCellClick: function(key, event) {
     // Delete the clicked partition if it isn't the only partition left
     if (event.shiftKey && this.props.partitions.length > 1) {
       this.deletePartition(key);
     }
   },
-  
+
   handleDrop: function(key, event) {
     // Split the partition at {key} into two partitions by adding a new
     // partition to the left and resizing the original and new partition
-    // so that the 
+    // so that the
     var partition = this.props.partitions[key],
         value = event.dataTransfer.getData('value'),
         tooltip = event.dataTransfer.getData('tooltip');
@@ -123,24 +127,24 @@ var PartitionSelector = React.createClass({
     this.setPartitions(partitions);
     if (this.props.handleDrop) this.props.handleDrop(key, {value: value, tooltip: tooltip});
   },
-  
+
   // MOUNTING & UNMOUNTING
-  
+
   componentDidMount: function() {
     // Register event handlers on the document for mouseup and mousemove since
     // we want these to fire even the the user is not over our component
     document.addEventListener('mouseup', this.stopDragHandle);
     document.addEventListener('mousemove', this.moveDragHandle);
   },
-  
+
   componentWillUnmount: function() {
     // Clean up the event handlers!
     document.removeEventListener('mouseup', this.stopDragHandle);
     document.removeEventListener('mousemove', this.moveDragHandle);
   },
-  
+
   // RENDERING
-  
+
   renderMarkers: function(markers, className, totalSize) {
     if (!markers) return;
     var lastMarker, markerStep;
@@ -157,19 +161,21 @@ var PartitionSelector = React.createClass({
       var percent = m/totalSize;
       if (percent > 0.01 && percent < 0.99) {
         return (
-          <div key={i} className={'marker '+className} style={{left: this.percentAsString(percent)}}></div>
+          <div key={i}
+               className={this._class('PartitionSelector_marker') + ' ' + this._class(className)}
+               style={{left: this.percentAsString(percent)}} />
         );
       }
     }.bind(this));
   },
-  
+
   renderLabels: function(labels, totalSize) {
     if (!labels) return;
     return labels.map((label, i) => (
-      <div key={i} className={'label'} style={{left: this.percentAsString(label[1]/totalSize)}}>{label[0]}</div>
+      <div key={i} className={this._class('PartitionSelector_label')} style={{left: this.percentAsString(label[1]/totalSize)}}>{label[0]}</div>
     ));
   },
-  
+
   renderPartition: function(partition, key, width) {
     // Takes a width in percent e.g. 0.42
     var tooltip,
@@ -177,10 +183,10 @@ var PartitionSelector = React.createClass({
           width: this.percentAsString(width),
           backgroundColor: this.state.colorGenerator.getColor(partition.value),
         },
-        resizing = partition.resizing ? 'resizing' : ''
-        cellClasses = `progress-bar cell ${resizing}`,
-        dragging = this.state.draggingHandle === key ? 'dragging' : '',
-        handleClasses = `handle ${dragging}`,
+        resizing = partition.resizing ? this._class('PartitionSelector_resizing') : ''
+        cellClasses = `${this._class('PartitionSelector_bar')} ${this._class('PartitionSelector_cell')} ${resizing}`,
+        dragging = this.state.draggingHandle === key ? this._class('PartitionSelector_dragging') : '',
+        handleClasses = `${this._class('PartitionSelector_handle')} ${dragging}`,
         handle = (key === this.props.partitions.length - 1) ? '' : (
           <div className={handleClasses}
                onMouseDown={(e) => this.startDragHandle(key, e)}>
@@ -191,7 +197,7 @@ var PartitionSelector = React.createClass({
     // We hide tooltips while dragging. Cells without a tooltip get no tooltip
     // instead of an empty one.
     if ((this.state.draggingHandle === false) && partition.tooltip) {
-      tooltip = <div className="cell-tooltip">{partition.tooltip}</div>;
+      tooltip = <div className={this._class('PartitionSelector_tooltip')}>{partition.tooltip}</div>;
     }
     return (
       <div key={key}
@@ -205,7 +211,8 @@ var PartitionSelector = React.createClass({
            onDrop={(e) => this.handleDrop(key, e)}>
         {handle}
         {tooltip}
-        <PartitionDraggableValue values={{
+        <PartitionDraggableValue getClass={this._class}
+                                 values={{
                                    value: partition.value,
                                    tooltip: partition.tooltip,
                                  }}>
@@ -213,7 +220,7 @@ var PartitionSelector = React.createClass({
       </div>
     );
   },
-  
+
   // Store and get the reference to the DOM node for a cell at index {key}
   saveCellRef: function(key, ref) {
     if (!this.cellRefs) this.cellRefs = [];
@@ -222,19 +229,19 @@ var PartitionSelector = React.createClass({
   getCellRef: function(key) {
     return this.cellRefs[key];
   },
-  
+
   render: function() {
     var totalSize = this.totalSize(),
         partitions = this.props.partitions.map(function(partition, i) {
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
     return (
-      <div className={`partition-selector ${this.props.customClass || ''}`}>
-        <div className={`progress ${this.state.valid ? 'valid' : 'invalid'}`}>
+      <div className={`${this._class('PartitionSelector')} ${this.props.customClass || ''}`}>
+        <div className={`${this._class('PartitionSelector_parts')} ${this.state.valid ? 'valid' : 'invalid'}`}>
           {partitions}
         </div>
-        {this.renderMarkers(this.props.minorMarkers, 'marker-minor', totalSize)}
-        {this.renderMarkers(this.props.majorMarkers, 'marker-major', totalSize)}
+        {this.renderMarkers(this.props.minorMarkers, 'PartitionSelector_marker_minor', totalSize)}
+        {this.renderMarkers(this.props.majorMarkers, 'PartitionSelector_marker_major', totalSize)}
         {this.renderLabels(this.props.labels, totalSize)}
       </div>
     );

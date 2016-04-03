@@ -13,7 +13,7 @@ body {
   padding-top: 70px;
 }
 
-.partition-selector {
+.PartitionSelector {
   position: relative;
   width: 100%;
 
@@ -27,7 +27,7 @@ body {
       box-shadow: 0 0 4px 2px rgb(213, 19, 0);
     }
   }
-  & .cell {
+  & .PartitionSelector_cell {
     transition: none;
     // background-color: lightpink;
     position: relative;
@@ -40,10 +40,10 @@ body {
       border-top-right-radius: $partitionBorderRadius;
       border-bottom-right-radius: $partitionBorderRadius;
     }
-    &.resizing {
+    &.PartitionSelector_resizing {
       border-color: blue;
     }
-    & .handle {
+    & .PartitionSelector_handle {
       position: absolute;
       right: 0;
       top: 0;
@@ -75,15 +75,15 @@ body {
         border-bottom-width: $arrowHeadHeight;
         border-bottom-color: rgba(0, 0, 0, 0.6);
       }
-      &.dragging {
+      &.PartitionSelector_dragging {
         background-color: rgb(0, 0, 0);
       }
     }
-    & .partition-draggable-value {
+    & .PartitionSelector_draggable {
       width: 100%;
       height: 100%;
     }
-    & .cell-tooltip {
+    & .PartitionSelector_tooltip {
       position: absolute;
       left: 50%;
       top: 50%;
@@ -113,23 +113,23 @@ body {
       //   left: calc(50% - 5px);
       // }
     }
-    &:hover .cell-tooltip {
+    &:hover .PartitionSelector_tooltip {
       display: block;
     }
   }
-  & .marker {
+  & .PartitionSelector_marker {
     position: absolute;
     bottom: 0;
     height: 20px;
     width: 1px;
     background-color: rgb(94, 93, 93);
     pointer-events: none;
-    &.marker-major {
+    &.PartitionSelector_marker_major {
       width: 2px;
       height: 30px;
     }
   }
-  & .label {
+  & .PartitionSelector_label {
     position: absolute;
     top: calc(100% + 5px);
     font-size: 60%;
@@ -139,18 +139,18 @@ body {
   }
 }
 
-.work-hours-select {
-  & .progress {
+.ReactTimesheet_work_hours_select {
+  & .PartitionSelector_parts {
     height: $workHoursPartitionHeight;
   }
-  & .marker {
+  & .PartitionSelector_marker {
     height: $workHoursMarginHeight;
-    &.marker-major {
+    &.PartitionSelector_marker_major {
       height: $workHoursMarginMajorHeight;
     }
   }
-  & .cell {
-    & .handle {
+  & .PartitionSelector_cell {
+    & .PartitionSelector_handle {
       height: $workHoursPartitionHeight;
     }
   }
@@ -174,7 +174,7 @@ body {
   }
 }
 
-.timesheet-partition-day {
+.ReactTimesheet_part_day {
   position: relative;
   & label {
     position: absolute;
