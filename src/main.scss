@@ -175,12 +175,44 @@ body {
 }
 
 .ReactTimesheet_part_day {
-  position: relative;
-  & label {
-    position: absolute;
-    top: 5px;
-    right: 0;
-    input { margin-right: 6px; }
+  display: flex;
+  flex-direction: row;
+  & .ReactTimesheet_part_titles {
+    position: relative;
+    width: $partitionSelectorHeight * 0.9;
+    height: $partitionSelectorHeight;
+    & .ReactTimesheet_part_shortname {
+      font-size: $partitionSelectorHeight / 4;
+      line-height: $partitionSelectorHeight / 3;
+      position: absolute;
+      text-align: center;
+      width: 100%;
+      bottom: 0;
+      left: 0;
+    }
+    & .ReactTimesheet_part_dayNumber {
+      font-size: $partitionSelectorHeight * 4 / 9;
+      line-height: $partitionSelectorHeight * 2 / 3;
+      width: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      text-align: center;
+    }
+  }
+  & .ReactTimesheet_part_selectors {
+    flex-grow: 1;
+  }
+  & .ReactTimesheet_work_hours_toggle {
+    width: 30px;
+    text-align: right;
+    & input {
+      width: 20px;
+      height: 20px;
+    }
+    & label span {
+      display: none;
+    }
   }
 }
 

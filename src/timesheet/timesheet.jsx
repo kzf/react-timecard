@@ -13,8 +13,8 @@ var Timesheet = React.createClass({
     'bootstrap': {
       'ReactTimesheet': '',
       'ReactTimesheet_container': 'row',
-      'ReactTimesheet_docks': 'col-sm-5',
-      'ReactTimesheet_times': 'col-sm-7',
+      'ReactTimesheet_docks': 'col-sm-4',
+      'ReactTimesheet_times': 'col-sm-8',
       'PartitionSelector_parts': 'progress',
       'PartitionSelector_bar': 'progress-bar',
     }
@@ -53,6 +53,8 @@ var Timesheet = React.createClass({
             )), timeBreaks);
         return {
           name: day.name,
+          dayNumber: 23, // TODO: Parse the date and get this
+          shortname: day.name.substring(0,3),
           date: day.date,
           partitions: partitions,
           partitionsHistory: [],
@@ -91,6 +93,8 @@ var Timesheet = React.createClass({
   getUpdatedDay: function(day, newPartitions, newWorkHours) {
     return {
       name: day.name,
+      shortname: day.shortname,
+      dayNumber: day.dayNumber,
       date: day.date,
       partitions: (typeof newPartitions === 'undefined' ? day.partitions : newPartitions),
       partitionsHistory: day.partitionsHistory.concat([day.partitions]),
@@ -260,21 +264,28 @@ var Timesheet = React.createClass({
     }
     return (
       <div key={i} className={this._class('ReactTimesheet_part_day')}>
-        <h4>{day.name}</h4>
-        <label>
-          <input type="checkbox" checked={!!day.workHours} onClick={() => this.toggleCustomWorkHours(i)}/>
-          Custom Work Hours
-        </label>
-        {customWorkHours}
+        <div className={this._class('ReactTimesheet_part_titles')}>
+          <span className={this._class('ReactTimesheet_part_shortname')}>{day.shortname}</span>
+          <span className={this._class('ReactTimesheet_part_dayNumber')}>{day.dayNumber}</span>
+        </div>
+        <div className={this._class('ReactTimesheet_part_selectors')}>
+          {customWorkHours}
 
-        <PartitionSelector partitions={this.applyTooltips(day.partitions)}
-                           handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
-                           colorGenerator={this.colorGenerator}
-                           getClass={this._class}
-                           labels={markersAndLabels.labels}
-                           handleDrop={(i, cell) => this.tooltips[cell.value] = cell.tooltip}
-                           minorMarkers={markersAndLabels.minorMarkers}
-                           majorMarkers={markersAndLabels.majorMarkers} />
+          <PartitionSelector partitions={this.applyTooltips(day.partitions)}
+                             handlePartitionChange={(p) => this.handlePartitionChange(i, p)}
+                             colorGenerator={this.colorGenerator}
+                             getClass={this._class}
+                             labels={markersAndLabels.labels}
+                             handleDrop={(i, cell) => this.tooltips[cell.value] = cell.tooltip}
+                             minorMarkers={markersAndLabels.minorMarkers}
+                             majorMarkers={markersAndLabels.majorMarkers} />
+        </div>
+        <div className={this._class('ReactTimesheet_work_hours_toggle')}>
+          <label>
+            <input type="checkbox" checked={!!day.workHours} onClick={() => this.toggleCustomWorkHours(i)} />
+            <span>Custom Work Hours</span>
+          </label>
+        </div>
       </div>
     );
   },
