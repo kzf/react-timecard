@@ -86,32 +86,32 @@ body {
     & .PartitionSelector_tooltip {
       position: absolute;
       left: 50%;
-      top: 50%;
+      top: calc(100% + 9px);
       transform: translateX(-50%) translateY(-50%);
       text-align: center;
-      background-color: rgba(0, 0, 0, 0.4);
+      background-color: rgba(0, 0, 0, 0.6);
       color: #fff;
       font-size: 0.8em;
-      padding: 2px 4px;
+      padding: 4px 8px;
       line-height: 1.1em;
       margin-top: 6px;
       border-radius: 6px;
       display: none;
       z-index: 999;
       pointer-events: none;
-      // &::after {
-      //   content: "";
-      //   width: 0;
-      //   height: 0;
-      //   border: 0 solid transparent;
-      //   border-bottom-width: 5px;
-      //   border-left-width: 5px;
-      //   border-right-width: 5px;
-      //   border-bottom-color: rgba(0, 0, 0, 0.4);
-      //   position: absolute;
-      //   top: -5px;
-      //   left: calc(50% - 5px);
-      // }
+      &::after {
+        content: "";
+        width: 0;
+        height: 0;
+        border: 0 solid transparent;
+        border-bottom-width: 5px;
+        border-left-width: 5px;
+        border-right-width: 5px;
+        border-bottom-color: rgba(0, 0, 0, 0.6);
+        position: absolute;
+        top: -5px;
+        left: calc(50% - 5px);
+      }
     }
     &:hover .PartitionSelector_tooltip {
       display: block;

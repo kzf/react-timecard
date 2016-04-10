@@ -5,6 +5,7 @@ var Timesheet = React.createClass({
 
   converter: new TimesheetConverter(),
   colorGenerator: new ColorGenerator(),
+  workHoursColorGenerator: new ColorGenerator(),
   tooltips: {
     working: 'Work Hours',
   },
@@ -32,7 +33,8 @@ var Timesheet = React.createClass({
         timeBreaks = this.timeBreaks(defaultWorkHours);
 
     this.colorGenerator.addColor(undefined, '#eee');
-    this.colorGenerator.addColor('working', '#aaa');
+    this.workHoursColorGenerator.addColor(undefined, '#fafafa');
+    this.workHoursColorGenerator.addColor('working', '#ccc');
 
     this.props.initialTimes.forEach(function(day) {
       day.times.forEach(function(time) {
@@ -257,7 +259,7 @@ var Timesheet = React.createClass({
                            handlePartitionChange={(w) => this.handleWorkHoursChange(i, w)}
                            validatePartitions={this.validateWorkHours}
                            labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
-                           colorGenerator={this.colorGenerator}
+                           colorGenerator={this.workHoursColorGenerator}
                            minorMarkers={15}
                            majorMarkers={60} />
       );
