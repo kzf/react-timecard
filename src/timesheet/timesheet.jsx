@@ -159,59 +159,6 @@ var Timesheet = React.createClass({
     ];
   },
 
-  loadCurrentActivity: function(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('get', '/api_samples/activity.json', true);
-    xhr.onreadystatechange = function() {
-      var data, categories;
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          data = JSON.parse(xhr.responseText);
-          categories = data.actions.days.map((day) => (
-            {
-              label: day.date,
-              activities: day.actions.map((action) => (
-                {
-                  value: '#' + action.ticket.id,
-                  tooltip: action.ticket.title,
-                  badge: action.time,
-                }
-              )),
-            }
-          ));
-          callback(categories);
-        }
-      }
-    };
-    xhr.send();
-  },
-
-  loadLastWeeksTimesheet: function(callback) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('get', '/api_samples/last_week.json', true);
-    xhr.onreadystatechange = function() {
-      var data, categories;
-      if (xhr.readyState === 4) {
-        if (xhr.status === 200) {
-          data = JSON.parse(xhr.responseText);
-          categories = data.map((day) => (
-            {
-              label: day.date,
-              activities: day.work_logs.map((action) => (
-                {
-                  value: '#' + action.ticket_id,
-                  tooltip: action.title,
-                }
-              )),
-            }
-          ));
-          callback(categories);
-        }
-      }
-    };
-    xhr.send();
-  },
-
   getHiddenFieldsForValue: function(value) {
     if (value && value[0] === '#') {
       return [{
@@ -382,16 +329,7 @@ var Timesheet = React.createClass({
             <div className={this._class('ReactTimesheet_docks')}>
               <Dock activeActivities={this.getActiveActivities()}
                     colorGenerator={this.colorGenerator}
-                    panels={[
-                      {
-                        title: 'This Week',
-                        source: this.loadCurrentActivity,
-                      },
-                      {
-                        title: 'Last Week',
-                        source: this.loadLastWeeksTimesheet,
-                      }
-                    ]}/>
+                    panels={this.props.panels}/>
             </div>
           </div>
         </form>
