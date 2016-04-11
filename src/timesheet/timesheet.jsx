@@ -52,10 +52,11 @@ var Timesheet = React.createClass({
                 startTime: time.startTime && new Time(time.startTime),
                 endTime: time.endTime && new Time(time.endTime),
               }
-            )), timeBreaks);
+            )), timeBreaks),
+            date = new Date(day.date);
         return {
           name: day.name,
-          dayNumber: 23, // TODO: Parse the date and get this
+          dayNumber: date.getDate(),
           shortname: day.name.substring(0,3),
           date: day.date,
           partitions: partitions,
