@@ -4,6 +4,10 @@ var TimesheetTable = React.createClass({
     };
   },
 
+  _class: function(className) {
+    return this.props.getClass ? this.props.getClass(className) : className;
+  },
+
   handleEndTimeChange: function(key, value) {
     var times = this.props.times.concat([]),
         newTimeRow = {
@@ -26,6 +30,7 @@ var TimesheetTable = React.createClass({
                          key={2*i}
                          colorGenerator={this.props.colorGenerator}
                          date={i}
+                         getClass={this._class}
                          index={i}
                          hiddenFields={this.props.getHiddenFieldsForValue(t.value)}
                          generateInputName={this.props.generateInputName}
@@ -40,7 +45,7 @@ var TimesheetTable = React.createClass({
       if (finalRow) {
         timeRows.push(
           <tr key={2*i + 1}
-              className="time-break active">
+              className={this._class('ReactTimesheetTable_time_break')}>
             <td colSpan="4"></td>
           </tr>
         );
@@ -50,12 +55,12 @@ var TimesheetTable = React.createClass({
     }.bind(this));
     return (
       <div>
-        <div className="panel panel-default">
-          <div className="panel-heading">
+        <div className={this._class('ReactTimesheetTable_day')}>
+          <div className={this._class('ReactTimesheetTable_day_name')}>
             {this.props.name}
           </div>
-          <div className="panel-collapse collapse in">
-            <table className="table timesheet-table">
+          <div className={this._class('ReactTimesheetTable_day_panel')}>
+            <table className={this._class('ReactTimesheetTable_day_table')}>
               <tbody>
                 {timeRows}
               </tbody>

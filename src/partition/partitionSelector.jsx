@@ -232,12 +232,14 @@ var PartitionSelector = React.createClass({
 
   render: function() {
     var totalSize = this.totalSize(),
+        validClass = this._class('PartitionSelector_valid'),
+        invalidClass = this._class('PartitionSelector_invalid'),
         partitions = this.props.partitions.map(function(partition, i) {
       return this.renderPartition(partition, i, partition.size / totalSize);
     }.bind(this));
     return (
       <div className={`${this._class('PartitionSelector')} ${this.props.customClass || ''}`}>
-        <div className={`${this._class('PartitionSelector_parts')} ${this.state.valid ? 'valid' : 'invalid'}`}>
+        <div className={`${this._class('PartitionSelector_parts')} ${this.state.valid ? validClass : invalidClass}`}>
           {partitions}
         </div>
         {this.renderMarkers(this.props.minorMarkers, 'PartitionSelector_marker_minor', totalSize)}

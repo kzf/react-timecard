@@ -4,22 +4,60 @@ var Timesheet = React.createClass({
   END_TIME: new Time(7, 0, 'pm'),
 
   converter: new TimesheetConverter(),
+
   colorGenerator: new ColorGenerator(),
   workHoursColorGenerator: new ColorGenerator(),
+
+
   tooltips: {
     working: 'Work Hours',
   },
 
+
+  /*
+  * A theme gives a way to modify the classes given to the various elements within
+  * the timesheet so that classes from a CSS framework can be used.
+  * One or more custom class names can be specified for each of the default class
+  * names used by the timesheet.
+  */
   themes: {
     'bootstrap': {
-      'ReactTimesheet': '',
       'ReactTimesheet_container': 'row',
       'ReactTimesheet_docks': 'col-sm-4',
       'ReactTimesheet_times': 'col-sm-8',
+      'ReactTimesheet_submit_row': 'row',
+      'ReactTimesheet_submit_container': 'col-xs-12 text-right',
+      'ReactTimesheet_submit_btn': 'btn btn-default',
       'PartitionSelector_parts': 'progress',
       'PartitionSelector_bar': 'progress-bar',
+      'ReactTimesheetTable_time_break': 'active',
+      'ReactTimesheetTable_day': 'panel panel-default',
+      'ReactTimesheetTable_day_name': 'panel-heading',
+      'ReactTimesheetTable_day_panel': 'panel-collapse collapse in',
+      'ReactTimesheetTable_day_table': 'table',
+      'ReactTimesheetTable_time_input': 'form-control',
+      'ReactTimesheetTable_name_input': 'form-control',
     }
   },
+
+  // Accepts a {className} and will concatenate any custom class names that
+  // are defined by the current theme
+  _class: function(className) {
+    var theme = this.getTheme();
+    if (!theme) return className;
+    return className + ' ' + (theme[className] || '');
+  },
+
+  // Get the curently active theme
+  getTheme: function() {
+    var theme = this.props.theme || 'bootstrap';
+    if (typeof theme === 'string') {
+      return this.themes[theme];
+    } else {
+      return theme;
+    }
+  },
+
 
   getInitialState: function() {
     // TODO: Handle timeBreaks for non-default work hours being reloaded
@@ -259,6 +297,7 @@ var Timesheet = React.createClass({
       <div key={i}>
         <TimesheetTable times={time.array}
                         name={time.name}
+                        getClass={this._class}
                         getHiddenFieldsForValue={this.getHiddenFieldsForValue}
                         generateInputName={this.generateInputName}
                         timeBreaks={time.timeBreaks}
@@ -268,31 +307,15 @@ var Timesheet = React.createClass({
     ));
   },
 
+  // Render a row containing the submit button for the containing form
   renderSubmitButton: function() {
     return (
-      <div className="row">
-          <div className="col-xs-12">
-              <div className="text-right">
-                  <button type="submit" className="btn btn-primary">Submit</button>
-              </div>
-          </div>
+      <div className={this._class('ReactTimesheet_submit_row')}>
+        <div className={this._class('ReactTimesheet_submit_container')}>
+          <button type="submit" className={this._class('ReactTimesheet_submit_btn')}>Submit</button>
+        </div>
       </div>
     );
-  },
-
-  _class: function(className) {
-    var theme = this.getTheme();
-    if (!theme) return className;
-    return className + ' ' + (theme[className] || '');
-  },
-
-  getTheme: function() {
-    var theme = this.props.theme || 'bootstrap';
-    if (typeof theme === 'string') {
-      return this.themes[theme];
-    } else {
-      return theme;
-    }
   },
 
   render: function() {

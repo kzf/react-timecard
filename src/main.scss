@@ -1,7 +1,7 @@
 $arrowHeadHeight: 4px;
 $partitionBorderRadius: 4px;
 $partitionSelectorHeight: 50px;
-$workHoursPartitionHeight: 28px;
+$workHoursPartitionHeight: 20px;
 $workHoursMarginHeight: 8px;
 $workHoursMarginMajorHeight: 14px;
 
@@ -13,6 +13,8 @@ body {
   padding-top: 70px;
 }
 
+// TODO: Refactor CSS to not talk about bootstrap classes
+
 .PartitionSelector {
   position: relative;
   width: 100%;
@@ -23,7 +25,7 @@ body {
   & .progress {
     overflow: visible;
     height: $partitionSelectorHeight;
-    &.invalid {
+    &.PartitionSelector_invalid {
       box-shadow: 0 0 4px 2px rgb(213, 19, 0);
     }
   }
@@ -156,14 +158,14 @@ body {
   }
 }
 
-.timesheet-table {
-  & input.invalid {
+.ReactTimesheetTable_day_table {
+  & input.ReactTimesheetTable_invalid {
     border-color: red;
     box-shadow: 0 0 5px red;
   }
   & td {
     position: relative;
-    & .table-row-color {
+    & .ReactTimesheetTable_row_color {
       background-color: rgb(238, 238, 238);
       position: absolute;
       top: 0;
@@ -220,12 +222,9 @@ body {
   border-bottom-width: 0;
 }
 
+// TODO: Remove this, make it namespaced
 input[type="time"][readonly] {
   background-color: #eee;
-}
-
-tr.time-break {
-
 }
 
 .dock-panel {

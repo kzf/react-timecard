@@ -4,12 +4,16 @@ var TimesheetTableRow = React.createClass({
       nonTimeValues: {},
     };
   },
-  
+
+  _class: function(className) {
+    return this.props.getClass ? this.props.getClass(className) : className;
+  },
+
   handleEndTimeChange: function(i, value) {
     // time inputs always return a blank value if they are invalid
     var isValidTime = value && this.props.startTime.lessThanEq(new Time(value)),
         nonTimeValues;
-    
+
     if (isValidTime) {
       this.props.handleEndTimeChange(i, value);
       this.clearNonTimeValue();
@@ -19,12 +23,12 @@ var TimesheetTableRow = React.createClass({
       this.setState({nonTimeValues: nonTimeValues});
     }
   },
-  
+
   handleStartTimeChange: function(i, value) {
     // time inputs always return a blank value if they are invalid
     var isValidTime = value && this.props.previousStartTime.lessThanEq(new Time(value)),
         nonTimeValues;
-    
+
     if (isValidTime) {
       this.props.handleEndTimeChange(i-1, value);
       this.clearNonTimeValue();
@@ -34,11 +38,11 @@ var TimesheetTableRow = React.createClass({
       this.setState({nonTimeValues: nonTimeValues});
     }
   },
-  
+
   clearNonTimeValue: function() {
     this.setState({nonTimeValues: undefined});
   },
-  
+
   renderHiddenFields: function() {
     return this.props.hiddenFields.map((f, i) => (
       <input type="hidden"
@@ -47,20 +51,24 @@ var TimesheetTableRow = React.createClass({
              value={f.value} />
     ));
   },
-  
+
   render: function() {
-    var values = Object.assign({}, this.state.nonTimeValues);
+    var values = Object.assign({}, this.state.nonTimeValues)
+        invalidClass = this._class('ReactTimesheetTable_invalid'),
+        validClass = this._class('ReactTimesheetTable_valid'),
+        inputClass = this._class('ReactTimesheetTable_time_input'),
+        nameClass = this._class('ReactTimesheetTable_name_input');
     if (values.endTime === undefined) values.endTime = this.props.endTime.toString24();
     if (values.startTime === undefined) values.startTime = this.props.startTime.toString24();
     return (
       <tr>
         <td>
-          <div className="table-row-color"
+          <div className={this._class('ReactTimesheetTable_row_color')}
                style={{backgroundColor: this.props.colorGenerator.getColor(this.props.name)}} />
         </td>
         <td>
           <input type="text"
-                 className="form-control"
+                 className={nameClass}
                  value={this.props.name}
                  readOnly="readonly" />
           {this.renderHiddenFields()}
@@ -68,7 +76,7 @@ var TimesheetTableRow = React.createClass({
         <td>
           <input type="time"
                  readOnly={this.props.readOnlyStart}
-                 className={`form-control ${this.state.nonTimeValues && this.state.nonTimeValues.startTime ? 'invalid' : 'valid'}`}
+                 className={`${inputClass} ${this.state.nonTimeValues && this.state.nonTimeValues.startTime ? invalidClass : validClass}`}
                  value={values.startTime}
                  onChange={(e) => this.handleStartTimeChange(this.props.index, e.target.value)}
                  onBlur={this.clearNonTimeValue} />
@@ -76,7 +84,7 @@ var TimesheetTableRow = React.createClass({
         <td>
           <input type="time"
                  readOnly={this.props.readOnlyEnd}
-                 className={`form-control ${this.state.nonTimeValues && this.state.nonTimeValues.endTime ? 'invalid' : 'valid'}`}
+                 className={`${inputClass} ${this.state.nonTimeValues && this.state.nonTimeValues.endTime ? invalidClass : validClass}`}
                  value={values.endTime}
                  onChange={(e) => this.handleEndTimeChange(this.props.index, e.target.value)}
                  onBlur={this.clearNonTimeValue}/>
