@@ -37,6 +37,17 @@ var Timesheet = React.createClass({
       'ReactTimesheetTable_day_table': 'table',
       'ReactTimesheetTable_time_input': 'form-control',
       'ReactTimesheetTable_name_input': 'form-control',
+      'ReactTimesheetDock_types': 'nav nav-tabs dock-types',
+      'ReactTimesheetDock_panel': 'list-group',
+      'ReactTimesheetDock_search_item': 'list-group-item',
+      'ReactTimesheetDock_search_input': 'form-control',
+      'ReactTimesheetDock_label': 'list-group-item disabled',
+      'ReactTimesheetDock_item': 'list-group-item dock-panel-item',
+      'ReactTimesheetDock_item_text': 'list-group-item-text',
+      'ReactTimesheetDock_item_value': 'label label-primary',
+      'ReactTimesheetDock_item_badge': 'label label-default',
+      'ReactTimesheetDock_loading': 'list-group',
+      'ReactTimesheetDock_loading_item': 'list-group-item',
     }
   },
 
@@ -352,6 +363,7 @@ var Timesheet = React.createClass({
             <div className={this._class('ReactTimesheet_docks')}>
               <Dock activeActivities={this.getActiveActivities()}
                     colorGenerator={this.colorGenerator}
+                    getClass={this._class}
                     panels={this.props.panels}/>
             </div>
           </div>

@@ -19,7 +19,7 @@ var PartitionDraggableValue = React.createClass({
 
   render: function() {
     return (
-      <div className="partition-draggable-value"
+      <div className={this._class('PartitionSelector_draggable')}
            draggable="true"
            onDragStart={this.handleDragStart}>
         {this.props.children}

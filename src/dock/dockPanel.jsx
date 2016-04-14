@@ -1,6 +1,6 @@
 var DockPanel = React.createClass({
   searchDelay: 400,
-  
+
   getInitialState: function() {
     return {
       managesOwnActivities: !!this.props.searches,
@@ -8,7 +8,11 @@ var DockPanel = React.createClass({
       searchTerms: (this.props.searches || []).map((s) => ''),
     };
   },
-  
+
+  _class: function(className) {
+    return this.props.getClass ? this.props.getClass(className) : className;
+  },
+
   handleDragStart: function(e) {
     var values = this.props.values,
         key;
@@ -18,14 +22,14 @@ var DockPanel = React.createClass({
       }
     }
   },
-  
+
   handleSearch: function(key, value) {
     this.setState({
       searchTerms: this.state.searchTerms.map((term, i) => ((i === key) ? value : ''))
     });
     this.asyncSearch(key, value);
   },
-  
+
   asyncSearch: function(i, value) {
     var search = this.props.searches[i],
         self = this;
@@ -47,16 +51,16 @@ var DockPanel = React.createClass({
       xhr.send({q: value});
     }, this.searchDelay);
   },
-  
+
   render: function() {
     var activities = this.state.managesOwnActivities ? this.state.activities : this.props.activities;
     if (this.props.visible) {
       if (this.props.loaded) {
         return (
-          <div className="list-group dock-panel">
+          <div className={this._class('ReactTimesheetDock_panel')}>
             {(this.props.searches || []).map((search, i) => (
-              <div key={i} className="list-group-item">
-                <input className="form-control"
+              <div key={i} className={this._class('ReactTimesheetDock_search_item')}>
+                <input className={this._class('ReactTimesheetDock_search_input')}
                        type="text"
                        placeholder={search.placeholder}
                        value={this.state.searchTerms[i]}
@@ -65,16 +69,16 @@ var DockPanel = React.createClass({
             ))}
             {activities.map((group, i) => (
               <div key={i}>
-                <div href="#" className="list-group-item disabled">
+                <div href="#" className={this._class('ReactTimesheetDock_label')}>
                   {group.label}
                 </div>
                 {(group.activities || []).map((activity, j) => (
-                  <div key={j} href="#" className="list-group-item dock-panel-item">
-                    <div className="dock-panel-color" style={{backgroundColor: this.props.colorGenerator.getColor(activity.value)}}></div>
-                    <p className="list-group-item-text">
-                      <span className="label label-primary">{activity.value}</span>
-                      {activity.badge ? <span className="label label-default">{activity.badge}</span> : ''}
-                      {activity.tooltip}
+                  <div key={j} href="#" className={this._class('ReactTimesheetDock_item')}>
+                    <div className={this._class('ReactTimesheetDock_item_color')} style={{backgroundColor: this.props.colorGenerator.getColor(activity.value)}}></div>
+                    <p className={this._class('ReactTimesheetDock_item_text')}>
+                      <span className={this._class('ReactTimesheetDock_item_value')}>{activity.value}</span>
+                      {activity.badge ? <span className={this._class('ReactTimesheetDock_item_badge')}>{activity.badge}</span> : ''}
+                      <span className={this._class('ReactTimesheetDock_tooltip')}>{activity.tooltip}</span>
                     </p>
                     <PartitionDraggableValue values={{
                                                value: activity.value,
@@ -88,8 +92,8 @@ var DockPanel = React.createClass({
         );
       } else {
         return (
-          <div className="list-group">
-            <div className="list-group-item">
+          <div className={this._class('ReactTimesheetDock_loading')}>
+            <div className={this._class('ReactTimesheetDock_loading_item')}>
               Loading...
             </div>
           </div>

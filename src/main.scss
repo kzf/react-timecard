@@ -218,7 +218,7 @@ body {
   }
 }
 
-.dock-types {
+.ReactTimesheetDock_types {
   border-bottom-width: 0;
 }
 
@@ -227,15 +227,16 @@ input[type="time"][readonly] {
   background-color: #eee;
 }
 
-.dock-panel {
+.ReactTimesheetDock_panel {
   height: 80vh;
   overflow-y: auto;
-  & .dock-panel-item {
+  & .ReactTimesheetDock_item{
     position: relative;
-    & .label {
+    & .ReactTimesheetDock_item_badge,
+    & .ReactTimesheetDock_item_value {
       margin-right: 5px;
     }
-    & .dock-panel-color {
+    & .ReactTimesheetDock_item_color {
       background-color: rgb(238, 238, 238);
       position: absolute;
       top: 0;
@@ -243,7 +244,7 @@ input[type="time"][readonly] {
       height: 100%;
       width: 10px;
     }
-    & .partition-draggable-value {
+    & .PartitionSelector_draggable {
       position: absolute;
       top: 0;
       left: 0;

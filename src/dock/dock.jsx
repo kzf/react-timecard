@@ -5,7 +5,11 @@ var Dock = React.createClass({
       activePanel: 0,
     };
   },
-  
+
+  _class: function(className) {
+    return this.props.getClass ? this.props.getClass(className) : className;
+  },
+
   loadPanel: function(panel, i) {
     if (!panel.loaded && !panel.loading) {
       panel.source(function(categories) {
@@ -20,7 +24,7 @@ var Dock = React.createClass({
     }
     return true;
   },
-  
+
   setActivePanel: function(key) {
     this.setState({
       panels: this.state.panels.map((panel, i) => (
@@ -35,9 +39,10 @@ var Dock = React.createClass({
       activePanel: key,
     });
   },
-  
+
   render: function() {
-    var panels = [{
+    var activeClass = this._class('ReactTimesheetDock_active'),
+        panels = [{
           title: 'Active',
           activities: this.props.activeActivities,
           loaded: true,
@@ -72,11 +77,11 @@ var Dock = React.createClass({
         }].concat(this.state.panels);
     return (
       <div>
-        <ul className="nav nav-tabs dock-types">
+        <ul className={this._class('ReactTimesheetDock_types')}>
           {panels.map((panel, i) => (
             <li key={i}
                 role="presentation"
-                className={`${i === this.state.activePanel ? 'active' : ''}`}>
+                className={`${i === this.state.activePanel ? activeClass : ''}`}>
               <a href="#" onClick={() => this.setActivePanel(i)}>{panel.title}</a>
             </li>
           ))}
@@ -85,6 +90,7 @@ var Dock = React.createClass({
           <DockPanel key={i}
                      colorGenerator={this.props.colorGenerator}
                      visible={i === this.state.activePanel}
+                     getClass={this._class}
                      name={panel.title}
                      loaded={panel.loaded}
                      searches={panel.searches}
