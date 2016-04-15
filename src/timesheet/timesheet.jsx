@@ -84,6 +84,11 @@ var Timesheet = React.createClass({
         ],
         timeBreaks = this.timeBreaks(defaultWorkHours);
 
+    // TODO: Make localstorage optional, defaultWorkHours can instead be passed as props and saved via form
+    if (window.localStorage && window.localStorage.getItem('ReactTimesheet_defaultWorkHours')) {
+      defaultWorkHours = JSON.parse(window.localStorage.getItem('ReactTimesheet_defaultWorkHours'));
+    }
+
     this.colorGenerator.addColor(undefined, '#eee');
     this.workHoursColorGenerator.addColor(undefined, '#fafafa');
     this.workHoursColorGenerator.addColor('working', '#ccc');
@@ -158,6 +163,9 @@ var Timesheet = React.createClass({
       days: newDays,
       defaultWorkHours: newWorkHours,
     });
+    if (window.localStorage) {
+      window.localStorage.setItem('ReactTimesheet_defaultWorkHours', JSON.stringify(newWorkHours));
+    }
   },
 
   getUpdatedDay: function(day, newPartitions, newWorkHours) {
