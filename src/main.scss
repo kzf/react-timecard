@@ -138,6 +138,7 @@ body {
     color: rgb(94, 93, 93);
     transform: translateX(-50%);
     user-select: none;
+    white-space:nowrap;
   }
 }
 
@@ -218,13 +219,13 @@ body {
   }
 }
 
-.ReactTimesheetDock_types {
-  border-bottom-width: 0;
-}
-
 // TODO: Remove this, make it namespaced
 input[type="time"][readonly] {
   background-color: #eee;
+}
+
+.ReactTimesheetDock_types {
+  border-bottom-width: 0;
 }
 
 .ReactTimesheetDock_panel {

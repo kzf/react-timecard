@@ -9,7 +9,7 @@ class TimesheetConverter {
     }
     return labels;
   }
-  
+
   calculateLabelsForTimeBreaks(timeBreaks) {
     var labels = [],
         minutesSoFar = 0;
@@ -21,7 +21,7 @@ class TimesheetConverter {
     }.bind(this));
     return labels;
   }
-  
+
   calculateMarkersAndLabelsForTimeBreaks(timeBreaks) {
     var labels = [],
         majorMarkers = [],
@@ -39,7 +39,7 @@ class TimesheetConverter {
       labels, majorMarkers, minorMarkers
     };
   }
-  
+
   splitPartitionsFromTimeBreaks(partitions, timeBreaks) {
     // Split any partitions that overlap the boundaries between timeBreaks
     // into a portion before the gap and a portion after
@@ -62,7 +62,7 @@ class TimesheetConverter {
     });
     return splitPartitions;
   }
-  
+
   calculateTimesForSplitPartitions(splitPartitions, timeBreaks) {
     // ASSUMPTION: the boundaries of timeBreaks always line up exactly
     // with a boundary between two cells in splitPartitions i.e.
@@ -88,11 +88,11 @@ class TimesheetConverter {
     }
     return times;
   }
-  
+
   calculateTimesForPartitions(partitions, timeBreaks) {
     // e.g. take partitions: [{value:'A', size: 10}, {value:'B', size: 20}, {value:'C', size: 30}],
     //           timeBreaks: [[Time(7.0), Time(7,30)], [Time(8,30), Time(9.0)]]
-    // and return [{value: 'A', startTime: 7:00, endTime: 7:10}, 
+    // and return [{value: 'A', startTime: 7:00, endTime: 7:10},
     //             {value: 'B', startTime: 7:10, endTime: 7:30},
     //             {value: 'C', startTime: 8:00, endTime: 8:30}]
     // ASSUMPTION: partition total size equals timeBreaks total size
@@ -101,16 +101,16 @@ class TimesheetConverter {
       timeBreaks
     );
   }
-  
+
   calculatePartitionsForTimes(times, timeBreaks) {
-    // e.g. take times: [{value: 'A', startTime: 7:00, endTime: 7:10}, 
+    // e.g. take times: [{value: 'A', startTime: 7:00, endTime: 7:10},
     //                   {value: 'B', startTime: 7:10, endTime: 7:30},
     //                   {value: 'C', startTime: 8:00, endTime: 8:30}]
     //           timeBreaks: [[Time(7.0), Time(7,30)], [Time(8,30), Time(9.0)]]
     // and return [{value:'A', size: 10}, {value:'B', size: 20}, {value:'C', size: 30}]
     // ASSUMPTION: partition total size equals timeBreaks total size
     // TODO: Convert times into partitions
-    
+
     // preprocess the times so that they never cross a timeBreak boundary
     var timeBreakIndex = 0,
         scratchTimes = times.map((time) => (
@@ -124,7 +124,7 @@ class TimesheetConverter {
         splitTimes = [],
         timeIndex = 0,
         time, timeBreak, endTime;
-    
+
     while (timeIndex < scratchTimes.length) {
       time = scratchTimes[timeIndex];
       timeBreak = timeBreaks[timeBreakIndex];
@@ -172,8 +172,8 @@ class TimesheetConverter {
       }
       timeIndex++;
     }
-    
-    
+
+
     var partitions = [],
         lastPartition,
         lastEndTime;
@@ -198,14 +198,14 @@ class TimesheetConverter {
     });
     return partitions;
   }
-  
+
   calculatePartitionsForInitialTimes(initialTimes, timeBreaks) {
     // NOT Assuming that the total size of times is equal to total size of timeBreaks
-    // Convert the intialTimes to a new times array which has 
+    // Convert the intialTimes to a new times array which has
     var timeBreakIndex = 0,
         lastEndTime = timeBreaks[timeBreakIndex][0],
         times = [];
-    
+
     initialTimes.forEach(function(time, i) {
       // Do nothing if the time is negative duration or we have no start time
       if (!time.startTime || time.endTime.lessThan(time.startTime)) return;
@@ -225,7 +225,7 @@ class TimesheetConverter {
       });
       lastEndTime = time.endTime;
     });
-    
+
     return this.calculatePartitionsForTimes(times, timeBreaks);
   }
 }

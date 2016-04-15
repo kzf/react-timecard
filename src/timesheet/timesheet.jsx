@@ -22,12 +22,15 @@ var Timesheet = React.createClass({
   */
   themes: {
     'bootstrap': {
+      'ReactTimesheet_settings': 'row',
+      'ReactTimesheet_submit_settings': 'text-right',
+      'ReactTimesheet_settings_btn': 'btn btn-default',
       'ReactTimesheet_container': 'row',
       'ReactTimesheet_docks': 'col-sm-4',
       'ReactTimesheet_times': 'col-sm-8',
       'ReactTimesheet_submit_row': 'row',
       'ReactTimesheet_submit_container': 'col-xs-12 text-right',
-      'ReactTimesheet_submit_btn': 'btn btn-default',
+      'ReactTimesheet_submit_btn': 'btn btn-primary',
       'PartitionSelector_parts': 'progress',
       'PartitionSelector_bar': 'progress-bar',
       'ReactTimesheetTable_time_break': 'active',
@@ -91,6 +94,7 @@ var Timesheet = React.createClass({
       }.bind(this))
     }.bind(this));
     return {
+      inSettings: false,
       defaultWorkHours: defaultWorkHours,
       days: this.props.initialTimes.map(function(day) {
         var partitions = this.converter.calculatePartitionsForInitialTimes(day.times.map((time) => (
@@ -139,6 +143,20 @@ var Timesheet = React.createClass({
     newDays.splice(key, 1, this.getUpdatedDay(this.state.days[key], partitions.map((p) => ({value: p.value, size: p.size * multiplier})), valueToChangeTo));
     this.setState({
       days: newDays,
+    });
+  },
+
+  handleDefaultWorkHoursChange: function(newWorkHours) {
+    var newTotalSize = newWorkHours.filter((p) => p.value == 'working').reduce((a, b) => a + b.size, 0),
+        newDays = this.state.days.map(function(day) {
+          var partitions = day.partitions,
+              oldTotalSize = partitions.reduce((a, b) => a + b.size, 0),
+              multiplier = newTotalSize/oldTotalSize;
+          return this.getUpdatedDay(day, partitions.map((p) => ({value: p.value, size: p.size * multiplier})));
+        }.bind(this));
+    this.setState({
+      days: newDays,
+      defaultWorkHours: newWorkHours,
     });
   },
 
@@ -206,6 +224,15 @@ var Timesheet = React.createClass({
         activities: this.applyTooltips(activeActivitiesArray)
       }
     ];
+  },
+
+  toggleSettings: function(e) {
+    if (this.state.inSettings) {
+      this.setState({inSettings: false});
+    } else {
+      this.setState({inSettings: true});
+    }
+    e.preventDefault();
   },
 
   getHiddenFieldsForValue: function(value) {
@@ -323,18 +350,32 @@ var Timesheet = React.createClass({
     return (
       <div className={this._class('ReactTimesheet_submit_row')}>
         <div className={this._class('ReactTimesheet_submit_container')}>
-          <button type="submit" className={this._class('ReactTimesheet_submit_btn')}>Submit</button>
+          <button onClick={this.toggleSettings} className={this._class('ReactTimesheet_settings_btn')}>Settings</button>
+          <button type="submit" onClick={this.handleSubmit} className={this._class('ReactTimesheet_submit_btn')}>Submit</button>
         </div>
       </div>
     );
   },
 
   render: function() {
-    if (this.settings) {
+    if (this.state.inSettings) {
       return (
-        <div>
-          <div className="row">
-
+        <div className={this._class('ReactTimesheet')}>
+          <div className={this._class('ReactTimesheet_settings')}>
+            <h2>Settings</h2>
+            <h3>Default Work Hours</h3>
+              <PartitionSelector partitions={this.applyTooltips(this.state.defaultWorkHours)}
+                                 customClass={'ReactTimesheet_default_work_hours_select'}
+                                 getClass={this._class}
+                                 handlePartitionChange={(w) => this.handleDefaultWorkHoursChange(w)}
+                                 validatePartitions={this.validateWorkHours}
+                                 labels={this.converter.calculateLabelsFor(this.START_TIME, this.END_TIME)}
+                                 colorGenerator={this.workHoursColorGenerator}
+                                 minorMarkers={15}
+                                 majorMarkers={60} />
+            <div className={this._class('ReactTimesheet_submit_settings')}>
+              <button onClick={this.toggleSettings} className={this._class('ReactTimesheet_settings_btn')}>Save</button>
+            </div>
           </div>
         </div>
       );
