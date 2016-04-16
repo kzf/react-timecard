@@ -30,4 +30,5 @@ Timesheet.themes.bootstrap = {
   'ReactTimesheetDock_item_badge': 'label label-default',
   'ReactTimesheetDock_loading': 'list-group',
   'ReactTimesheetDock_loading_item': 'list-group-item',
+  'ReactTimesheetDock_active': 'active',
 };

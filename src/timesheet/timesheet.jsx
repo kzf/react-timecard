@@ -356,6 +356,15 @@ var Timesheet = React.createClass({
         </div>
       );
     } else {
+      var tables = null;
+      if (this.props.showTables) {
+        tables = (
+          <div>
+            {this.renderDayTables()}
+            {this.renderSubmitButton()}
+          </div>
+        );
+      }
       return (
         <form ref='timesheetForm'
               action={this.props.formAction}
@@ -368,12 +377,9 @@ var Timesheet = React.createClass({
           <div className={this._class('ReactTimesheet_container')}>
             <div className={this._class('ReactTimesheet_times')}>
               {this.renderDayPartitions()}
-
               {this.renderSubmitButton()}
 
-              {this.renderDayTables()}
-
-              {this.renderSubmitButton()}
+              {tables}
             </div>
 
 

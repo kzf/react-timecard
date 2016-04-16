@@ -85,65 +85,70 @@
       };
 
       window.onload = function() {
-        renderTimesheet(
-          [
-            {
-              name: 'Monday',
-              dayNumber: '15',
-              date: '2016-08-15',
-              times: [
-                {value: '#1234', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '17:30'},
-              ]
-            },
-            {
-              name: 'Tuesday',
-              dayNumber: '16',
-              date: '2016-08-16',
-              times: [
-                {value: '#1231', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
-              ]
-            },
-            {
-              name: 'Wednesday',
-              dayNumber: '17',
-              date: '2016-08-17',
-              times: [
-                {value: '#1232', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
-              ]
-            },
-            {
-              name: 'Thursday',
-              dayNumber: '18',
-              date: '2016-08-18',
-              times: [
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '8:40', endTime: '11:00'},
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '11:00', endTime: '11:30'},
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '13:20'},
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '13:20', endTime: '13:40'},
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '14:00', endTime: '14:20'},
-                {value: '#1284', tooltip: "Morris", id: 18, startTime: '17:22', endTime: '17:45'},
-              ]
-            },
-            {
-              name: 'Friday',
-              dayNumber: '19',
-              date: '2016-08-19',
-              times: [
-                {value: '#1934', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
-              ]
-            }
-          ],
-          '/actions/something',
-          [
-            {
-              title: 'This Week',
-              source: this.loadCurrentActivity,
-            },
-            {
-              title: 'Last Week',
-              source: this.loadLastWeeksTimesheet,
-            }
-          ]
+        ReactDOM.render(
+          React.createElement(Timesheet, {
+            initialTimes: [
+              {
+                name: 'Monday',
+                dayNumber: '15',
+                date: '2016-08-15',
+                times: [
+                  {value: '#1234', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '17:30'},
+                ]
+              },
+              {
+                name: 'Tuesday',
+                dayNumber: '16',
+                date: '2016-08-16',
+                times: [
+                  {value: '#1231', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
+                ]
+              },
+              {
+                name: 'Wednesday',
+                dayNumber: '17',
+                date: '2016-08-17',
+                times: [
+                  {value: '#1232', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
+                ]
+              },
+              {
+                name: 'Thursday',
+                dayNumber: '18',
+                date: '2016-08-18',
+                times: [
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '8:40', endTime: '11:00'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '11:00', endTime: '11:30'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '13:20'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '13:20', endTime: '13:40'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '14:00', endTime: '14:20'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '17:22', endTime: '17:45'},
+                ]
+              },
+              {
+                name: 'Friday',
+                dayNumber: '19',
+                date: '2016-08-19',
+                times: [
+                  {value: '#1934', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
+                ]
+              }
+            ],
+            formAction: '/actions/something',
+            panels: [
+              {
+                title: 'This Week',
+                source: this.loadCurrentActivity,
+              },
+              {
+                title: 'Last Week',
+                source: this.loadLastWeeksTimesheet,
+              }
+            ],
+            showTables: true,
+          }),
+          //<Timesheet initialTimes={initialTimes} formAction={formAction} panels={panels} />,
+          document.getElementById('timesheet')
         );
       }
     </script>
