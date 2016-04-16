@@ -34,6 +34,7 @@ var jsFiles = {
   ],
   source: [
     'node_modules/randomcolor/randomColor.js',
+    'src/themes/*.jsx',
     'src/*/*.jsx',
     'src/main.jsx',
   ],
@@ -124,7 +125,7 @@ gulp.task('sass', function() {
 
   var sassOptions = {
     includePaths: [
-      
+
     ]
   };
 
@@ -150,7 +151,7 @@ gulp.task('watch', function() {
 gulp.task('browsersync', function() {
   browserSync({
     port: 8080,
-    ui: { 
+    ui: {
       port: 8081,
     },
     server: {
