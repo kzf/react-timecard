@@ -32,7 +32,7 @@ var Dock = React.createClass({
           title: panel.title,
           activities: panel.activities,
           source: panel.source,
-          loading: panel.loading || ((i + 2 === key) && !panel.loaded && this.loadPanel(panel, i)),
+          loading: panel.loading || (!panel.loaded && this.loadPanel(panel, i)),
           loaded: panel.loaded,
         }
       )),
@@ -40,41 +40,25 @@ var Dock = React.createClass({
     });
   },
 
+  defaultPanels: function() {
+    var panels = [{
+      title: 'Active',
+      activities: this.props.activeActivities,
+      loaded: true,
+    }];
+    if (this.props.searches) {
+      panels.push({
+        title: 'Search',
+        loaded: true,
+        searches: this.props.searches,
+      });
+    }
+    return panels;
+  },
+
   render: function() {
     var activeClass = this._class('ReactTimesheetDock_active'),
-        panels = [{
-          title: 'Active',
-          activities: this.props.activeActivities,
-          loaded: true,
-        }, {
-          title: 'Search',
-          loaded: true,
-          searches: [{
-            source: '../custom/samples/ticket_autocomplete.json',
-            placeholder: 'Search Tickets...',
-            getActivities: function(data) {
-              return {
-                label: 'Search Results',
-                activities: data.map((d) => ({
-                  value: '#' + d.value,
-                  tooltip: d.description,
-                }))
-              };
-            }
-          }, {
-            source: '../custom/samples/project_autocomplete.json',
-            placeholder: 'Search Projects...',
-            getActivities: function(data) {
-              return {
-                label: 'Search Results',
-                activities: data.map((d) => ({
-                  value: d.value,
-                  tooltip: d.customer + ' - ' + d.pool,
-                }))
-              };
-            }
-          }]
-        }].concat(this.state.panels);
+        panels = this.defaultPanels().concat(this.state.panels);
     return (
       <div>
         <ul className={this._class('ReactTimesheetDock_types')}>

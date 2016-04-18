@@ -387,7 +387,8 @@ var Timesheet = React.createClass({
               <Dock activeActivities={this.getActiveActivities()}
                     colorGenerator={this.colorGenerator}
                     getClass={this._class}
-                    panels={this.props.panels}/>
+                    panels={this.props.panels}
+                    searches={this.props.searches}/>
             </div>
           </div>
         </form>

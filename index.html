@@ -146,6 +146,31 @@
               }
             ],
             showTables: true,
+            searches: [{
+              source: '../custom/samples/ticket_autocomplete.json',
+              placeholder: 'Search Tickets...',
+              getActivities: function(data) {
+                return {
+                  label: 'Search Results',
+                  activities: data.map((d) => ({
+                    value: '#' + d.value,
+                    tooltip: d.description,
+                  }))
+                };
+              }
+            }, {
+              source: '../custom/samples/project_autocomplete.json',
+              placeholder: 'Search Projects...',
+              getActivities: function(data) {
+                return {
+                  label: 'Search Results',
+                  activities: data.map((d) => ({
+                    value: d.value,
+                    tooltip: d.customer + ' - ' + d.pool,
+                  }))
+                };
+              }
+            }]
           }),
           //<Timesheet initialTimes={initialTimes} formAction={formAction} panels={panels} />,
           document.getElementById('timesheet')

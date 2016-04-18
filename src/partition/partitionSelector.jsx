@@ -171,13 +171,18 @@ var PartitionSelector = React.createClass({
 
   renderLabels: function(labels, totalSize) {
     if (!labels) return;
-    return labels.filter((label) => (label[1]/totalSize) < 0.99).map((label, i) => (
-      <div key={i}
-           className={this._class('PartitionSelector_label')}
-           style={{left: this.percentAsString(label[1]/totalSize)}}>
-        {label[0]}
-      </div>
-    ));
+    return labels.map(function(label, i) {
+      var percent = label[1]/totalSize;
+      if (percent > 0.01 && percent < 0.99) {
+        return (
+          <div key={i}
+               className={this._class('PartitionSelector_label')}
+               style={{left: this.percentAsString(percent)}}>
+            {label[0]}
+          </div>
+        );
+      }
+    }.bind(this));
   },
 
   renderPartition: function(partition, key, width) {
