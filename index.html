@@ -87,6 +87,17 @@
       window.onload = function() {
         ReactDOM.render(
           React.createElement(Timesheet, {
+            minWorkMinutes: 7.5 * 60,
+            startTime: '8:00',
+            endTime: '19:00',
+            defaultWorkHours: [
+              {size: 120},
+              {value: 'working', size: 210},
+              {size: 60},
+              {value: 'working', size: 240},
+              {size: 90},
+            ],
+            saveDefaultWorkHours: true,
             initialTimes: [
               {
                 name: 'Monday',

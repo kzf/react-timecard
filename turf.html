@@ -89,6 +89,11 @@
         });
         ReactDOM.render(
           React.createElement(Timesheet, {
+            defaultWorkHours: [
+              {value: 'working', size: 12 * 60},
+            ],
+            startTime: '4:00',
+            endTime: '16:00',
             initialTimes: times,
             formAction: '/actions/something',
             panels: [
@@ -97,6 +102,7 @@
                 source: getActivities,
               }
             ],
+            saveDefaultWorkHours: false,
           }),
           document.getElementById('timesheet')
         );

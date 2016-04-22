@@ -1,8 +1,4 @@
 var Timesheet = React.createClass({
-  MIN_WORK_MINUTES: 7.5 * 60,
-  START_TIME: new Time(7, 0),
-  END_TIME: new Time(7, 0, 'pm'),
-
   converter: new TimesheetConverter(),
 
   colorGenerator: new ColorGenerator(),
@@ -40,22 +36,26 @@ var Timesheet = React.createClass({
     }
   },
 
+  handleSubmit: function(e) {
+    if (this.props.handleSubmit) {
+      this.props.handleSubmit(e, this.refs.timesheetForm);
+    }
+  },
 
   getInitialState: function() {
-    // TODO: Handle timeBreaks for non-default work hours being reloaded
-    var defaultWorkHours = [
-          {size: 120},
-          {value: 'working', size: 210},
-          {size: 60},
-          {value: 'working', size: 240},
-          {size: 90},
-        ],
-        timeBreaks = this.timeBreaks(defaultWorkHours);
+    this.MIN_WORK_MINUTES = this.props.minWorkMinutes;
+    this.START_TIME = new Time(this.props.startTime);
+    this.END_TIME = new Time(this.props.endTime);
 
-    // TODO: Make localstorage optional, defaultWorkHours can instead be passed as props and saved via form
-    if (window.localStorage && window.localStorage.getItem('ReactTimesheet_defaultWorkHours')) {
+    // TODO: Handle timeBreaks for non-default work hours being reloaded
+    var defaultWorkHours = this.props.defaultWorkHours;
+
+    // TODO: Make localstorage can be saved via form
+    if (this.props.saveDefaultWorkHours && window.localStorage && window.localStorage.getItem('ReactTimesheet_defaultWorkHours')) {
       defaultWorkHours = JSON.parse(window.localStorage.getItem('ReactTimesheet_defaultWorkHours'));
     }
+
+    var timeBreaks = this.timeBreaks(defaultWorkHours);
 
     this.colorGenerator.addColor(undefined, '#eee');
     this.workHoursColorGenerator.addColor(undefined, '#fafafa');
@@ -131,7 +131,7 @@ var Timesheet = React.createClass({
       days: newDays,
       defaultWorkHours: newWorkHours,
     });
-    if (window.localStorage) {
+    if (this.props.saveDefaultWorkHours && window.localStorage) {
       window.localStorage.setItem('ReactTimesheet_defaultWorkHours', JSON.stringify(newWorkHours));
     }
   },
@@ -356,15 +356,12 @@ var Timesheet = React.createClass({
         </div>
       );
     } else {
-      var tables = null;
-      if (this.props.showTables) {
-        tables = (
-          <div>
-            {this.renderDayTables()}
-            {this.renderSubmitButton()}
-          </div>
-        );
-      }
+      var tables = (
+        <div style={{display: (this.props.showTables ? null : 'none')}}>
+          {this.renderDayTables()}
+          {this.renderSubmitButton()}
+        </div>
+      );
       return (
         <form ref='timesheetForm'
               action={this.props.formAction}
