@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TimesheetX</title>
+    <link rel="stylesheet" href="dist/main.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+  <body>
+    <nav class="navbar navbar-default navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="#">Timesheets</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav">
+            <li class="active"><a href="#">Sample</a></li>
+            <li><a href="#about">Context</a></li>
+          </ul>
+        </div><!--/.nav-collapse -->
+      </div>
+    </nav>
+
+    <div class="container">
+
+      <div id="timesheet">
+      </div>
+    </div>
+
+    <script src="vendor/react.js"></script>
+    <script src="vendor/react-dom.js"></script>
+    <script src="dist/app.js"></script>
+
+    <script>
+      window.onload = function() {
+        ReactDOM.render(
+          React.createElement(Timesheet, {
+            minWorkMinutes: 7.5 * 60,
+            startTime: '8:00',
+            endTime: '19:00',
+            defaultWorkHours: [
+              {size: 120},
+              {value: 'working', size: 210},
+              {size: 60},
+              {value: 'working', size: 240},
+              {size: 90},
+            ],
+            saveDefaultWorkHours: true,
+            initialTimes: [
+              {
+                name: 'Wednesday',
+                dayNumber: '17',
+                date: '2016-08-17',
+                times: [
+                  {value: '#1232', tooltip: "Morris", id: 18, startTime: '9:00', endTime: '17:30'},
+                ]
+              },
+              {
+                name: 'Thursday',
+                dayNumber: '18',
+                date: '2016-08-18',
+                times: [
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '8:40', endTime: '10:20'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '11:00', endTime: '11:30'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '13:10'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '13:20', endTime: '13:40'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '14:00', endTime: '14:20'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '17:00', endTime: '17:45'},
+                ]
+              },
+              {
+                name: 'Thursday',
+                dayNumber: '18',
+                date: '2016-08-18',
+                times: [
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '8:40', endTime: '10:20'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '11:00', endTime: '11:30'},
+                  {value: '#1284', tooltip: "Morris", id: 18, startTime: '12:00', endTime: '13:10'},
+                ]
+              },
+            ],
+            formAction: '/actions/something',
+            showTables: true,
+          }),
+          //<Timesheet initialTimes={initialTimes} formAction={formAction} panels={panels} />,
+          document.getElementById('timesheet')
+        );
+      }
+    </script>
+  </body>
+</html>

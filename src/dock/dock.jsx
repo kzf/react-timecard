@@ -1,7 +1,7 @@
 var Dock = React.createClass({
   getInitialState: function() {
     return {
-      panels: this.props.panels,
+      panels: this.props.panels || [],
       activePanel: 0,
     };
   },

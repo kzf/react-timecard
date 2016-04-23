@@ -204,7 +204,8 @@ class TimesheetConverter {
     // Convert the intialTimes to a new times array which has
     var timeBreakIndex = 0,
         lastEndTime = timeBreaks[timeBreakIndex][0],
-        times = [];
+        times = [],
+        lastTime = null;
 
     initialTimes.forEach(function(time, i) {
       // Do nothing if the time is negative duration or we have no start time
@@ -217,15 +218,26 @@ class TimesheetConverter {
         lastEndTime = time.startTime;
       }
       // Add this time
-      times.push({
+      lastTime = {
         value: time.value,
         tooltip: time.tooltip,
         startTime: lastEndTime,
         endTime: time.endTime,
-      });
+      };
+      times.push(lastTime);
       lastEndTime = time.endTime;
     });
 
+    // Add a final time if we didn't make it to the final timeBreak
+    var endTime = timeBreaks[timeBreaks.length - 1][1];
+    if (!lastTime || lastTime.endTime.lessThan(endTime)) {
+      times.push({
+        startTime: lastTime.endTime,
+        endTime: endTime,
+      })
+    }
+
+    console.log('calling calc prtitions for times', times, timeBreaks);
     return this.calculatePartitionsForTimes(times, timeBreaks);
   }
 }
