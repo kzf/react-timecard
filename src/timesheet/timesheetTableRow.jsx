@@ -48,7 +48,7 @@ var TimesheetTableRow = React.createClass({
       <input type="hidden"
              name={this.props.generateInputName(this.props.date, this.props.index, f.name)}
              key={i}
-             value={f.value} />
+             value={f.value || ''} />
     ));
   },
 
