@@ -48,14 +48,15 @@ var Timesheet = React.createClass({
     this.END_TIME = new Time(this.props.endTime);
 
     // TODO: Handle timeBreaks for non-default work hours being reloaded
-    var defaultWorkHours = this.props.defaultWorkHours;
+    var defaultWorkTimes = this.props.defaultWorkHours.map((t) => ({endTime: new Time(t.endTime), startTime: new Time(t.startTime), value: 'working'}));
 
     // TODO: Make localstorage can be saved via form
     if (this.props.saveDefaultWorkHours && window.localStorage && window.localStorage.getItem('ReactTimesheet_defaultWorkHours')) {
-      defaultWorkHours = JSON.parse(window.localStorage.getItem('ReactTimesheet_defaultWorkHours'));
+      defaultWorkTimes = JSON.parse(window.localStorage.getItem('ReactTimesheet_defaultWorkHours')).map((t) => ({endTime: new Time(t.endTime), startTime: new Time(t.startTime), value: 'working'}));
     }
 
-    var timeBreaks = this.timeBreaks(defaultWorkHours);
+    var defaultWorkHours = this.converter.calculatePartitionsForInitialTimes(defaultWorkTimes, [[this.START_TIME, this.END_TIME]]);
+    var defaultTimeBreaks = this.timeBreaks(defaultWorkHours);
 
     this.colorGenerator.addColor(undefined, '#eee');
     this.workHoursColorGenerator.addColor(undefined, '#fafafa');
@@ -70,6 +71,19 @@ var Timesheet = React.createClass({
       inSettings: false,
       defaultWorkHours: defaultWorkHours,
       days: this.props.initialTimes.map(function(day) {
+        var localTimeBreaks = defaultTimeBreaks,
+            workHours;
+        if (day.workHours) {
+          localTimeBreaks = day.workHours.map((t) => ([new Time(t.startTime), new Time(t.endTime)]));
+          workHours = this.converter.calculatePartitionsForInitialTimes(
+            day.workHours.map((t) => ({
+              endTime: new Time(t.endTime),
+              startTime: new Time(t.startTime),
+              value: 'working',
+            })),
+            [[this.START_TIME, this.END_TIME]]
+          );
+        }
         var partitions = this.converter.calculatePartitionsForInitialTimes(day.times.map((time) => (
               {
                 value: time.value,
@@ -78,7 +92,7 @@ var Timesheet = React.createClass({
                 startTime: time.startTime && new Time(time.startTime),
                 endTime: time.endTime && new Time(time.endTime),
               }
-            )), timeBreaks),
+            )), localTimeBreaks),
             date = new Date(day.date);
         return {
           name: day.name,
@@ -88,7 +102,7 @@ var Timesheet = React.createClass({
           partitions: partitions,
           partitionsHistory: [],
           partitionsFuture: [],
-          workHours: false,
+          workHours: workHours,
         };
       }.bind(this)),
     };
@@ -120,7 +134,7 @@ var Timesheet = React.createClass({
   },
 
   handleDefaultWorkHoursChange: function(newWorkHours) {
-    var newTotalSize = newWorkHours.filter((p) => p.value == 'working').reduce((a, b) => a + b.size, 0),
+    var newTotalSize = newWorkHours.filter((p) => p.value === 'working').reduce((a, b) => a + b.size, 0),
         newDays = this.state.days.map(function(day) {
           var partitions = day.partitions,
               oldTotalSize = partitions.reduce((a, b) => a + b.size, 0),
@@ -131,8 +145,12 @@ var Timesheet = React.createClass({
       days: newDays,
       defaultWorkHours: newWorkHours,
     });
+
     if (this.props.saveDefaultWorkHours && window.localStorage) {
-      window.localStorage.setItem('ReactTimesheet_defaultWorkHours', JSON.stringify(newWorkHours));
+      var times = this.converter.calculateTimesForPartitions(newWorkHours, [[this.START_TIME, this.END_TIME]]);
+      times = times.filter((t) => t.value === 'working')
+                   .map((t) => ({endTime: t.endTime.toString(), startTime: t.startTime.toString()}))
+      window.localStorage.setItem('ReactTimesheet_defaultWorkHours', JSON.stringify(times));
     }
   },
 
@@ -284,7 +302,7 @@ var Timesheet = React.createClass({
         </div>
         <div className={this._class('ReactTimesheet_work_hours_toggle')}>
           <label>
-            <input type="checkbox" checked={!!day.workHours} onClick={() => this.toggleCustomWorkHours(i)} />
+            <input type="checkbox" checked={!!day.workHours} onChange={() => this.toggleCustomWorkHours(i)} />
             <span>Custom Work Hours</span>
           </label>
         </div>

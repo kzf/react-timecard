@@ -6,6 +6,7 @@ var Time = function(hour, minute, ampm) {
       this.hour += 12;
     }
   } else {
+    if (!hour) return false;
     var x = hour.split(':');
     if (x.length !== 2) return false;
     this.hour = parseInt(x[0]);

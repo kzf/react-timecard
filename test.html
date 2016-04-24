@@ -35,14 +35,11 @@
         ReactDOM.render(
           React.createElement(Timesheet, {
             minWorkMinutes: 7.5 * 60,
-            startTime: '8:00',
+            startTime: '7:00',
             endTime: '19:00',
             defaultWorkHours: [
-              {size: 120},
-              {value: 'working', size: 210},
-              {size: 60},
-              {value: 'working', size: 240},
-              {size: 90},
+              {startTime: '9:00', endTime: '12:30'},
+              {startTime: '13:30', endTime: '17:30'},
             ],
             saveDefaultWorkHours: true,
             initialTimes: [
@@ -69,9 +66,9 @@
                 ]
               },
               {
-                name: 'Thursday',
-                dayNumber: '18',
-                date: '2016-08-18',
+                name: 'Friday',
+                dayNumber: '19',
+                date: '2016-08-19',
                 times: [
                   {value: '#1284', tooltip: "Morris", id: 18, startTime: '8:40', endTime: '10:20'},
                   {value: '#1284', tooltip: "Morris", id: 18, startTime: '11:00', endTime: '11:30'},
