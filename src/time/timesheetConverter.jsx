@@ -208,10 +208,12 @@ class TimesheetConverter {
         lastTime = null;
 
     initialTimes.forEach(function(time, i) {
-      // Do nothing if the time is negative duration or we have no start time
-      if (!time.startTime || time.endTime.lessThan(time.startTime)) return;
+      if (!time.startTime && !time.endTime) return;
       // If we have no end time then set end time to start Time
       if (!time.endTime) time.endTime = time.startTime;
+      // Do nothing if the time is negative duration or we have no start time
+      if (!time.startTime || time.endTime.lessThan(time.startTime)) return;
+      if (!time.startTime.isValid() || !time.endTime.isValid()) return;
       // If we missed a spot, add a time to fill it
       if (lastEndTime && lastEndTime.lessThan(time.startTime)) {
         times.push({startTime: lastEndTime, endTime: time.startTime});
@@ -237,7 +239,6 @@ class TimesheetConverter {
       })
     }
 
-    console.log('calling calc prtitions for times', times, timeBreaks);
     return this.calculatePartitionsForTimes(times, timeBreaks);
   }
 }

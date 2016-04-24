@@ -7,11 +7,16 @@ var Time = function(hour, minute, ampm) {
     }
   } else {
     var x = hour.split(':');
+    if (x.length !== 2) return false;
     this.hour = parseInt(x[0]);
     this.minute = parseInt(x[1]);
   }
   return this;
 }
+
+Time.prototype.isValid = function() {
+  return (typeof this.hour === 'number') && (typeof this.minute === 'number');
+};
 
 Time.prototype.lessThanEq = function(time) {
   if (this.hour < time.hour) return true;
