@@ -38,9 +38,7 @@
 
     <script>
       var getActivities = function(callback) {
-        console.log('here');
         setTimeout(function() {
-          console.log('drongo');
           callback([
             {
               label: 'Turf Management',
@@ -94,6 +92,7 @@
             ],
             startTime: '4:00',
             endTime: '16:00',
+            theme: 'bootstrap',
             initialTimes: times,
             formAction: '/actions/something',
             panels: [

@@ -84,6 +84,24 @@
         xhr.send();
       };
 
+      var hiddenRowFields = function(value) {
+        if (value && value[0] === '#') {
+          return [{
+            name: 'ticket_id',
+            value: value.substr(1),
+          }];
+        } else {
+          return [{
+            name: 'project_code',
+            value: value,
+          }];
+        }
+      };
+
+      var getInputName = function(date, index, nameBase) {
+        return 'user[work_logs_attributes][][' + nameBase + ']';
+      };
+
       window.onload = function() {
         ReactDOM.render(
           React.createElement(Timesheet, {
@@ -95,6 +113,9 @@
               {startTime: '13:30', endTime: '17:30'},
             ],
             saveDefaultWorkHours: true,
+            getHiddenFieldsForValue: hiddenRowFields,
+            getInputName :getInputName,
+            theme: 'bootstrap',
             initialTimes: [
               {
                 name: 'Monday',

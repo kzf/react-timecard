@@ -28,11 +28,11 @@ var Timesheet = React.createClass({
 
   // Get the curently active theme
   getTheme: function() {
-    var theme = this.props.theme || 'bootstrap';
+    var theme = this.props.theme;
     if (typeof theme === 'string') {
       return this.themes[theme];
     } else {
-      return theme;
+      return theme || {};
     }
   },
 
@@ -52,13 +52,20 @@ var Timesheet = React.createClass({
 
     // TODO: Make localstorage can be saved via form
     if (this.props.saveDefaultWorkHours && window.localStorage && window.localStorage.getItem('ReactTimesheet_defaultWorkHours')) {
-      defaultWorkTimes = JSON.parse(window.localStorage.getItem('ReactTimesheet_defaultWorkHours')).map((t) => ({endTime: new Time(t.endTime), startTime: new Time(t.startTime), value: 'working'}));
+      defaultWorkTimes = JSON.parse(
+        window.localStorage.getItem('ReactTimesheet_defaultWorkHours')
+      ).map((t) => ({
+        endTime: new Time(t.endTime),
+        startTime: new Time(t.startTime),
+        value: 'working',
+      }));
     }
 
     var defaultWorkHours = this.converter.calculatePartitionsForInitialTimes(defaultWorkTimes, [[this.START_TIME, this.END_TIME]]);
     var defaultTimeBreaks = this.timeBreaks(defaultWorkHours);
 
     this.colorGenerator.addColor(undefined, '#eee');
+    this.colorGenerator.addColor('', '#eee');
     this.workHoursColorGenerator.addColor(undefined, '#fafafa');
     this.workHoursColorGenerator.addColor('working', '#ccc');
 
@@ -230,21 +237,11 @@ var Timesheet = React.createClass({
   },
 
   getHiddenFieldsForValue: function(value) {
-    if (value && value[0] === '#') {
-      return [{
-        name: 'ticket_id',
-        value: value.substr(1),
-      }];
-    } else {
-      return [{
-        name: 'project_code',
-        value: value,
-      }];
-    }
+    return (this.props.getHiddenFieldsForValue ? this.props.getHiddenFieldsForValue(value) : []);
   },
 
   generateInputName: function(date, index, nameBase) {
-    return 'user[work_logs_attributes][][' + nameBase + ']';
+    return this.props.getInputName ? this.props.getInputName(date, index, nameBase) : 'timesheet['+index+']['+nameBase+']';
   },
 
   renderHiddenFields: function() {

@@ -3,11 +3,11 @@ class ColorGenerator {
     this.colorMap = {};
     this.colorPool = [];
   }
-  
+
   addColor(key, color) {
     this.colorMap[key] = color;
   }
-  
+
   getColor(key) {
     if (!this.colorMap[key]) {
       if (this.colorPool.length === 0) {
