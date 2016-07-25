@@ -1,0 +1,24 @@
+$partitionSelectorHeight: 50px;
+
+.partition-selector {
+  width: 100%;
+  height: $partitionSelectorHeight + 2;
+  border: 1px solid black;
+  box-sizing: border-box;
+  & .cell {
+    float: left;
+    height: $partitionSelectorHeight;
+    border: 1px solid red;
+    box-sizing: border-box;
+    position: relative;
+    & .handle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: $partitionSelectorHeight + 10;
+      width: 2px;
+      background-color: orange;
+      cursor: col-resize;
+    }
+  }
+}
